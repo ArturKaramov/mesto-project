@@ -11,14 +11,6 @@
   font-family: 'Inter', Arial, sans-serif;
 }
 
-@media screen and (max-width: 918px) {
-  .page {
-    padding-left: 19px;
-    padding-right: 19px;
-    box-sizing: border-box;
-  }
-}
-
 @media screen and (max-width: 320px) {
   .page {
     padding-top: 28px;

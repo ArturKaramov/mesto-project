@@ -4,6 +4,14 @@
   padding-top: 66px;
 }
 
+@media screen and (max-width: 918px) {
+  .footer {
+    padding-left: 19px;
+    padding-right: 19px;
+    box-sizing: border-box;
+  }
+}
+
 @media screen and (max-width: 320px) {
   .footer {
     padding-top: 48px;

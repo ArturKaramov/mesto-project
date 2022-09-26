@@ -1,4 +1,4 @@
-.save {
+.profile-edit__save {
   background-color: #000;
   color: #fff;
   margin: 0;
@@ -11,16 +11,17 @@
   font-size: 18px;
   line-height: 18px;
   border-radius: 2px;
+  cursor: pointer;
 }
 
-.save:hover {
+.profile-edit__save:hover {
   opacity: .8;
 }
 
 @media screen and (max-width: 508px) {
-  .save {
+  .profile-edit__save {
     padding-bottom: 14px;
     margin-top: 15px;
   }
-  
+
 }
