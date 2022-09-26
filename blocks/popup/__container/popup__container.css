@@ -1,0 +1,19 @@
+.popup__container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 470px;
+  min-width: 282px;
+  position: absolute;
+  top: calc((100vh - 370px)/2);
+  left: calc((100vw - 470px)/2);
+}
+
+@media screen and (max-width: 508px) {
+  .popup__container {
+    width: calc(100% - 38px);
+    top: calc((100vh - 330px)/2);
+    left: 19px;
+    gap: 16px;
+  }
+}

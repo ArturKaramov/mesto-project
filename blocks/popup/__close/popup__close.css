@@ -1,0 +1,16 @@
+.popup__close {
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  align-self: flex-end;
+  max-width: 32px;
+  max-height: 32px;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 508px) {
+  .popup__close {
+    max-width: 20px;
+    max-height: 20px;
+  }
+}

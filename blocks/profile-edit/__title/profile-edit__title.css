@@ -1,0 +1,16 @@
+.profile-edit__title {
+  color:#000;
+  margin: 0;
+  padding-bottom: 24px;
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 23px;
+}
+
+@media screen and (max-width: 508px) {
+  .profile-edit__title {
+    font-size: 18px;
+    line-height: 22px;
+    padding-bottom: 45px;
+  }
+}
