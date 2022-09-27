@@ -8,8 +8,9 @@
   overflow: hidden;
 }
 
-@media screen and (max-width: 336px) {
+@media screen and (max-width: 536px) {
   .profile__about {
+    max-width: 282px;
     font-size: 14px;
     line-height: 14px;
   }
