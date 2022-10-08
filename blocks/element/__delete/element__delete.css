@@ -1,0 +1,29 @@
+.element__delete {
+  background-image: url("../../../images/can.svg");
+  background-size: auto;
+  background-position: bottom;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  width: 18px;
+  height: 19.3px;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  transition: .3s;
+  z-index: 0;
+  display: flex;
+}
+
+.element__delete:hover {
+  opacity: .6;
+}
+
+.element__delete:hover .element__trash-cap {
+  animation: opening .6s linear 1 forwards;
+}
+
+

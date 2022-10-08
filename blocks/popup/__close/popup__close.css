@@ -2,10 +2,12 @@
   padding: 0;
   border: 0;
   background-color: transparent;
-  align-self: flex-end;
   max-width: 32px;
   max-height: 32px;
   cursor: pointer;
+  position: absolute;
+  top: -40px;
+  right: -40px;
 }
 
 .popup__close:hover {
@@ -16,5 +18,7 @@
   .popup__close {
     max-width: 20px;
     max-height: 20px;
+    top: -36px;
+    right: 0;
   }
 }

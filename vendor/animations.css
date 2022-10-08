@@ -1,0 +1,22 @@
+@keyframes opening {
+  from {
+    transform: rotate(0deg);
+    transform-origin: 0px;
+  }
+  to {
+    transform: rotate(-45deg);
+    transform-origin: 0px;
+  }
+}
+
+@keyframes heartbeat {
+  0% {
+    transform: scale(1, 1);
+  }
+  50% {
+    transform: scale(1.1, 1.1);
+  }
+  100% {
+    transform: scale(1, 1);
+  }
+}

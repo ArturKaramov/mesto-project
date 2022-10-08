@@ -1,4 +1,4 @@
-.profile-edit__save {
+.popup__save {
   background-color: #000;
   color: #fff;
   margin: 0;
@@ -14,14 +14,13 @@
   cursor: pointer;
 }
 
-.profile-edit__save:hover {
+.popup__save:hover {
   opacity: .8;
 }
 
 @media screen and (max-width: 508px) {
-  .profile-edit__save {
+  .popup__save {
     padding-bottom: 14px;
     margin-top: 15px;
   }
-
 }

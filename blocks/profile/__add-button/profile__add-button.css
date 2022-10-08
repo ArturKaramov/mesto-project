@@ -7,6 +7,7 @@
   border: 2px solid #fff;
   object-fit: cover;
   cursor: pointer;
+  transition: .3s;
 }
 
 .profile__add-button:hover {

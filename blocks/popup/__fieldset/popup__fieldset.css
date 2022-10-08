@@ -1,4 +1,4 @@
-.profile-edit__personal {
+.popup__fieldset {
   margin: 0;
   max-width: 430px;
   box-sizing: border-box;
@@ -14,8 +14,7 @@
 }
 
 @media screen and (max-width: 508px) {
-  .profile-edit__personal {
+  .popup__fieldset {
     padding: 25px 22px;
   }
-  
 }

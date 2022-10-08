@@ -3,4 +3,8 @@
   padding: 0;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  object-position: top;
+  cursor: pointer;
 }
