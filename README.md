@@ -17,5 +17,8 @@ Mesto: интерактивная страница, куда можно доба
 - [JavaScript](https://ru.wikipedia.org/wiki/JavaScript)
 - [Методология БЭМ](https://ru.wikipedia.org/wiki/БЭМ)
 
+# Проект на GitHub Pages
+- [Mesto](https://arturkaramov.github.io/mesto-project/)
+
 # Автор проекта
 - [Карамов Артур](https://github.com/ArturKaramov)

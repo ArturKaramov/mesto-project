@@ -13,53 +13,6 @@
   <header class="header">
     <img class="header__logo" src="./images/logo.svg" alt="Проект Место">
   </header>
-
-  <div class="popup popup-profile">
-    <div class="popup__container">
-      <form class="popup__form profile-edit" name="profile-data">
-        <fieldset class="popup__fieldset profile-edit__personal">
-          <button type="button" class="popup__close">
-            <img src="./images/close.svg" class="popup__close-icon" alt="Закрыть">
-          </button>
-          <h2 class="popup__title profile-edit__title">Редактировать профиль</h2>
-          <input type="text" class="profile-edit__name popup__item" name="name" placeholder="Жак-Ив Кусто"
-            autocomplete="off">
-          <input type="text" class="profile-edit__about popup__item" name="about" placeholder="Исследователь океана"
-            autocomplete="off">
-          <button type="submit" class="popup__save profile-edit__save">Сохранить</button>
-        </fieldset>
-      </form>
-    </div>
-  </div>
-
-  <div class="popup popup-element">
-    <div class="popup__container">
-      <form class="popup__form card-add" name="element-data">
-        <fieldset class="popup__fieldset card-add__data">
-          <button type="button" class="popup__close">
-            <img src="./images/close.svg" class="popup__close-icon" alt="Закрыть">
-          </button>
-          <h2 class="popup__title profile-edit__title">Новое место</h2>
-          <input type="text" class="popup__item card-add__name" name="name" placeholder="Название">
-          <input type="text" class="popup__item card-add__link" name="link" placeholder="Ссылка на картинку">
-          <button type="submit" class="popup__save card-add__save">Создать</button>
-        </fieldset>
-      </form>
-    </div>
-  </div>
-
-  <div class="popup popup-image">
-    <div class="popup-image__container">
-      <figure class="popup-image__figure">
-        <button type="button" class="popup__close">
-          <img src="./images/close.svg" class="popup__close-icon" alt="Закрыть">
-        </button>
-        <img class="popup-image__image" src="#" alt="">
-        <figcaption class="popup-image__caption"></figcaption>
-      </figure>
-    </div>
-  </div>
-
   <main class="content">
     <section class="profile">
       <div class="profile__data">
@@ -84,6 +37,52 @@
   <footer class="footer">
     <p class="footer__copyright">&copy;2022 Mesto Russia</p>
   </footer>
+  <div class="popup popup-profile">
+    <div class="popup__container">
+      <form class="popup__form profile-edit" name="profile-data">
+        <fieldset class="popup__fieldset profile-edit__personal">
+          <button type="button" class="popup__close">
+            <img src="./images/close.svg" class="popup__close-icon" alt="Закрыть">
+          </button>
+          <h2 class="popup__title profile-edit__title">Редактировать профиль</h2>
+          <input type="text" class="profile-edit__name popup__item" name="name" value="Жак-Ив Кусто"
+            autocomplete="off">
+          <input type="text" class="profile-edit__about popup__item" name="about" value="Исследователь океана"
+            autocomplete="off">
+          <button type="submit" class="popup__save profile-edit__save">Сохранить</button>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+
+  <div class="popup popup-element">
+    <div class="popup__container">
+      <form class="popup__form card-add" name="element-data">
+        <fieldset class="popup__fieldset card-add__data">
+          <button type="button" class="popup__close">
+            <img src="./images/close.svg" class="popup__close-icon" alt="Закрыть">
+          </button>
+          <h2 class="popup__title profile-edit__title">Новое место</h2>
+          <input type="text" class="popup__item card-add__name" name="name" placeholder="Название">
+          <input type="text" class="popup__item card-add__link" name="link" placeholder="Ссылка на картинку">
+          <button type="submit" class="popup__save card-add__save">Создать</butt on>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+
+  <div class="popup popup-image">
+    <div class="popup-image__container">
+      <figure class="popup-image__figure">
+        <button type="button" class="popup__close">
+          <img src="./images/close.svg" class="popup__close-icon" alt="Закрыть">
+        </button>
+        <img class="popup-image__image" src="#" alt="">
+        <figcaption class="popup-image__caption"></figcaption>
+      </figure>
+    </div>
+  </div>
+
   <template class="element__template">
     <li class="element">
       <img class="element__photo" src="" alt="">
