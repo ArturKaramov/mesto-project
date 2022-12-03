@@ -36,7 +36,7 @@ const elementAdd = document.querySelector('.profile__add-button');
 const popupImgPhoto = popupImg.querySelector('.popup-image__image');
 const popupCaption = popupImg.querySelector('.popup-image__caption');
 const templateElement = document.querySelector('.element__template').content;
-const cardsList = document.querySelector('.elements__list');
+const cardsContainer = document.querySelector('.elements__list');
 const formProfile = document.querySelector('.profile-edit');
 const inputName = formProfile.querySelector('.profile-edit__name');
 const inputAbout = formProfile.querySelector('.profile-edit__about');
@@ -80,7 +80,7 @@ function createCard(cardData) {
   return card;
 };
 
-const renderCard = (cardData) => {cardsList.prepend(createCard(cardData));};
+const renderCard = (cardData) => {cardsContainer.prepend(createCard(cardData))};
 
 function addCardHandle(evt) {
   evt.preventDefault();
