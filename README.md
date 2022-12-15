@@ -1,6 +1,6 @@
 # Проект: Место
 Mesto: интерактивная страница, куда можно добавлять фотографии, удалять их и ставить лайки.
-Адаптивный лэндинг под устройства шириной 1280px и 320px, реализована интерактивная часть с помощью JavaScript.
+Адаптивный лэндинг под десктоп и мобильные устройства, так же реализована интерактивная часть с помощью JavaScript.
 
 ### Содержание
 * Профиль Жака-Ив Кусто
@@ -14,8 +14,9 @@ Mesto: интерактивная страница, куда можно доба
 # Технологии
 - [HTML](https://ru.wikipedia.org/wiki/HTML)
 - [CSS](https://ru.wikipedia.org/wiki/CSS)
-- [JavaScript](https://ru.wikipedia.org/wiki/JavaScript)
-- [Методология БЭМ](https://ru.wikipedia.org/wiki/БЭМ)
+- [JavaScript](https://developer.mozilla.org/ru/docs/Web/JavaScript)
+- [Webpack](https://webpack.js.org/)
+- [Методология БЭМ](https://ru.bem.info/methodology/)
 
 # Проект на GitHub Pages
 - [Mesto](https://arturkaramov.github.io/mesto-project/)

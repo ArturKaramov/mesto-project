@@ -5,28 +5,28 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="<%=require("./images/avatar.jpg")%>">
   <title>Mesto Project</title>
-  <link rel="stylesheet" href="./pages/index.css">
 </head>
 
 <body class="page">
   <header class="header">
-    <img class="header__logo" src="./images/logo.svg" alt="Проект Место">
+    <img class="header__logo" src="<%=require("./images/logo.svg")%>" alt="Проект Место">
   </header>
   <main class="content">
     <section class="profile">
       <div class="profile__data">
-        <img class="profile__avatar" src="./images/avatar.jpg" alt="Аватар Жака Ив Кусто">
+        <img class="profile__avatar" src="<%=require("./images/avatar.jpg")%>" alt="Аватар Жака Ив Кусто">
         <div class="profile__info">
           <h1 class="profile__name">Жак-Ив Кусто</h1>
           <button type="button" class="profile__edit-button">
-            <img src="./images/pencil.svg" alt="Карандаш">
+            <img src="<%=require("./images/pencil.svg")%>" alt="Карандаш">
           </button>
           <p class="profile__about">Исследователь океана</p>
         </div>
       </div>
       <button type="button" class="profile__add-button">
-        <img src="./images/plus.svg" alt="Плюс">
+        <img src="<%=require("./images/plus.svg")%>" alt="Плюс">
       </button>
     </section>
     <div class="elements">
@@ -39,14 +39,20 @@
   </footer>
   <div class="popup popup-profile">
     <div class="popup__container">
-      <form class="popup__form profile-edit" name="profile-data">
+      <form class="popup__form profile-edit" name="profile-data" novalidate>
         <fieldset class="popup__fieldset profile-edit__personal">
           <button type="button" class="popup__close">
-            <img src="./images/close.svg" class="popup__close-icon" alt="Закрыть">
+            <img src="<%=require("./images/close.svg")%>" class="popup__close-icon" alt="Закрыть">
           </button>
           <h2 class="popup__title profile-edit__title">Редактировать профиль</h2>
-          <input type="text" class="profile-edit__name popup__item" name="name" placeholder="Имя" autocomplete="off">
-          <input type="text" class="profile-edit__about popup__item" name="about" placeholder="О себе" autocomplete="off">
+          <label>
+            <input type="text" id="name-input" class="profile-edit__name popup__item" pattern="^[a-zA-Zа-яА-ЯЁё\s\-]+$" minlength="2" maxlength="40" name="name" placeholder="Имя" autocomplete="off" required>
+            <span class="popup__error name-input-error"></span>
+          </label>
+          <label>
+            <input type="text" id="about-input" class="profile-edit__about popup__item" pattern="^[a-zA-Zа-яА-ЯЁё\s\-]+$" minlength="2" maxlength="200" name="about" placeholder="О себе" autocomplete="off" required>
+            <span class="popup__error about-input-error"></span>
+          </label>
           <button type="submit" class="popup__save profile-edit__save">Сохранить</button>
         </fieldset>
       </form>
@@ -55,14 +61,20 @@
 
   <div class="popup popup-element">
     <div class="popup__container">
-      <form class="popup__form card-add" name="element-data">
+      <form class="popup__form card-add" name="element-data" novalidate>
         <fieldset class="popup__fieldset card-add__data">
           <button type="button" class="popup__close">
-            <img src="./images/close.svg" class="popup__close-icon" alt="Закрыть">
+            <img src="<%=require("./images/close.svg")%>" class="popup__close-icon" alt="Закрыть">
           </button>
           <h2 class="popup__title profile-edit__title">Новое место</h2>
-          <input type="text" class="popup__item card-add__name" name="name" placeholder="Название">
-          <input type="text" class="popup__item card-add__link" name="link" placeholder="Ссылка на картинку">
+          <label>
+            <input type="text" id="place-input" class="popup__item card-add__name" pattern="^[a-zA-Zа-яА-ЯЁё\s\-]+$" minlength="2" maxlength="30" name="name" placeholder="Название" required>
+            <span class="popup__error place-input-error"></span>
+          </label>
+          <label>
+            <input type="url" id="url-input" class="popup__item card-add__link" name="link" placeholder="Ссылка на картинку" required>
+            <span class="popup__error url-input-error"></span>
+          </label>
           <button type="submit" class="popup__save card-add__save">Создать</button>
         </fieldset>
       </form>
@@ -73,7 +85,7 @@
     <div class="popup-image__container">
       <figure class="popup-image__figure">
         <button type="button" class="popup__close">
-          <img src="./images/close.svg" class="popup__close-icon" alt="Закрыть">
+          <img src="<%=require("./images/close.svg")%>" class="popup__close-icon" alt="Закрыть">
         </button>
         <img class="popup-image__image" src="#" alt="">
         <figcaption class="popup-image__caption"></figcaption>
@@ -85,7 +97,7 @@
     <li class="element">
       <img class="element__photo" src="" alt="">
       <button type="button" class="element__delete">
-        <img src="./images/cap.svg" class="element__trash-cap">
+        <img src="<%=require("./images/cap.svg")%>" class="element__trash-cap">
       </button>
       <div class="element__info">
         <h3 class="element__name"></h3>
@@ -93,7 +105,6 @@
       </div>
     </li>
   </template>
-  <script src="script.js"></script>
 </body>
 
 </html>
