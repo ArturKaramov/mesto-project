@@ -1,4 +1,4 @@
-import { openPopup } from "./utils";
+import { openPopup } from "./modal.js";
 
 const initialCards = [
   {

@@ -18,6 +18,15 @@
   opacity: .8;
 }
 
+.popup__save:disabled {
+  background-color: #fff;
+  color: #000;
+  opacity: 0.2;
+  border: 1px solid #000;
+  border-radius: 2px;
+  cursor: default;
+}
+
 @media screen and (max-width: 508px) {
   .popup__save {
     padding-bottom: 14px;

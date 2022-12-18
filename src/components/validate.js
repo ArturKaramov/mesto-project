@@ -2,20 +2,17 @@ const showInputError = (formElement, inputElement, errorMessage, obj) => {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
   inputElement.classList.add(obj.inputErrorClass);
   errorElement.textContent = errorMessage;
-  errorElement.style.display =
-  errorElement.classList.add(obj.errorClass);
 };
 
 const hideInputError = (formElement, inputElement, obj) => {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
   inputElement.classList.remove(obj.inputErrorClass);
-  errorElement.classList.remove(obj.errorClass);
   errorElement.textContent = '';
 };
 
 const checkInputValidity = (formElement, inputElement, obj) => {
   if (inputElement.validity.patternMismatch) {
-    inputElement.setCustomValidity("Недопустимый символ");
+    inputElement.setCustomValidity(inputElement.dataset.errorMessage);
   }
   else {
     inputElement.setCustomValidity("");
@@ -31,13 +28,11 @@ function hasInvalidInput(inputList) {
   return inputList.some((input) => {return !input.validity.valid})
 };
 
-function toggleButtonState(inputList, buttonElement, obj) {
+function toggleButtonState(inputList, buttonElement) {
   if (hasInvalidInput(inputList)) {
-    buttonElement.classList.add(obj.inactiveButtonClass)
     buttonElement.setAttribute("disabled", "")
   }
   else {
-    buttonElement.classList.remove(obj.inactiveButtonClass)
     buttonElement.removeAttribute("disabled", "")}
 };
 
@@ -47,7 +42,7 @@ const setEventListeners = (formElement, obj) => {
   inputList.forEach((inputElement) => {
     inputElement.addEventListener('input', function () {
       checkInputValidity(formElement, inputElement, obj);
-      toggleButtonState(inputList, buttonElement, obj)
+      toggleButtonState(inputList, buttonElement)
     });
   });
 };
@@ -55,9 +50,6 @@ const setEventListeners = (formElement, obj) => {
 const enableValidation = (obj) => {
   const formList = Array.from(document.querySelectorAll(obj.formSelector));
   formList.forEach((formElement) => {
-    formElement.addEventListener('submit', function (evt) {
-      evt.preventDefault();
-    });
     setEventListeners(formElement, obj)
   });
 };

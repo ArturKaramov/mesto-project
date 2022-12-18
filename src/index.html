@@ -40,21 +40,17 @@
   <div class="popup popup-profile">
     <div class="popup__container">
       <form class="popup__form profile-edit" name="profile-data" novalidate>
-        <fieldset class="popup__fieldset profile-edit__personal">
-          <button type="button" class="popup__close">
-            <img src="<%=require("./images/close.svg")%>" class="popup__close-icon" alt="Закрыть">
-          </button>
-          <h2 class="popup__title profile-edit__title">Редактировать профиль</h2>
-          <label>
-            <input type="text" id="name-input" class="profile-edit__name popup__item" pattern="^[a-zA-Zа-яА-ЯЁё\s\-]+$" minlength="2" maxlength="40" name="name" placeholder="Имя" autocomplete="off" required>
-            <span class="popup__error name-input-error"></span>
-          </label>
-          <label>
-            <input type="text" id="about-input" class="profile-edit__about popup__item" pattern="^[a-zA-Zа-яА-ЯЁё\s\-]+$" minlength="2" maxlength="200" name="about" placeholder="О себе" autocomplete="off" required>
-            <span class="popup__error about-input-error"></span>
-          </label>
-          <button type="submit" class="popup__save profile-edit__save">Сохранить</button>
-        </fieldset>
+        <button type="button" class="popup__close">
+          <img src="<%=require("./images/close.svg")%>" class="popup__close-icon" alt="Закрыть">
+        </button>
+        <h2 class="popup__title profile-edit__title">Редактировать профиль</h2>
+        <input type="text" id="name-input" class="profile-edit__name popup__item" pattern="^[a-zA-Zа-яА-ЯЁё\s\-]+$"
+            data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы" minlength="2" maxlength="40" name="name" placeholder="Имя" autocomplete="off" required>
+        <span class="popup__error name-input-error"></span>
+        <input type="text" id="about-input" class="profile-edit__about popup__item" pattern="^[a-zA-Zа-яА-ЯЁё\s\-]+$"
+            data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы" minlength="2" maxlength="200" name="about" placeholder="О себе" autocomplete="off" required>
+        <span class="popup__error about-input-error"></span>
+        <button type="submit" class="popup__save profile-edit__save">Сохранить</button>
       </form>
     </div>
   </div>
@@ -62,21 +58,17 @@
   <div class="popup popup-element">
     <div class="popup__container">
       <form class="popup__form card-add" name="element-data" novalidate>
-        <fieldset class="popup__fieldset card-add__data">
-          <button type="button" class="popup__close">
-            <img src="<%=require("./images/close.svg")%>" class="popup__close-icon" alt="Закрыть">
-          </button>
-          <h2 class="popup__title profile-edit__title">Новое место</h2>
-          <label>
-            <input type="text" id="place-input" class="popup__item card-add__name" pattern="^[a-zA-Zа-яА-ЯЁё\s\-]+$" minlength="2" maxlength="30" name="name" placeholder="Название" required>
-            <span class="popup__error place-input-error"></span>
-          </label>
-          <label>
-            <input type="url" id="url-input" class="popup__item card-add__link" name="link" placeholder="Ссылка на картинку" required>
-            <span class="popup__error url-input-error"></span>
-          </label>
-          <button type="submit" class="popup__save card-add__save">Создать</button>
-        </fieldset>
+        <button type="button" class="popup__close">
+          <img src="<%=require("./images/close.svg")%>" class="popup__close-icon" alt="Закрыть">
+        </button>
+        <h2 class="popup__title profile-edit__title">Новое место</h2>
+        <input type="text" id="place-input" class="popup__item card-add__name" pattern="^[a-zA-Zа-яА-ЯЁё\s\-]+$"
+            data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы" minlength="2" maxlength="30" name="name" placeholder="Название" required>
+        <span class="popup__error place-input-error"></span>
+        <input type="url" id="url-input" class="popup__item card-add__link" name="link"
+            placeholder="Ссылка на картинку" required>
+        <span class="popup__error url-input-error"></span>
+        <button type="submit" class="popup__save card-add__save">Создать</button>
       </form>
     </div>
   </div>
