@@ -1,9 +1,10 @@
-.popup__save {
+.popup__button {
   background-color: #000;
   color: #fff;
   margin: 0;
   padding: 0;
   border: 0;
+  box-sizing: border-box;
   margin-top: 18px;
   padding-top: 14px;
   padding-bottom: 18px;
@@ -12,24 +13,28 @@
   line-height: 18px;
   border-radius: 2px;
   cursor: pointer;
+  width: 358px;
 }
 
-.popup__save:hover {
+.popup__button:hover {
   opacity: .8;
 }
 
-.popup__save:disabled {
+.popup__button:disabled {
   background-color: #fff;
   color: #000;
   opacity: 0.2;
-  border: 1px solid #000;
+  outline: 1px solid #000;
   border-radius: 2px;
   cursor: default;
 }
 
 @media screen and (max-width: 508px) {
-  .popup__save {
+  .popup__button {
     padding-bottom: 14px;
     margin-top: 15px;
+    width: 100%;
+    font-size: 14px;
+    line-height: 18px;
   }
 }

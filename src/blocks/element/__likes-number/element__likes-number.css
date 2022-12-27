@@ -1,0 +1,11 @@
+.element__likes-number {
+  padding: 0;
+  grid-area: likes-number;
+  font-family: inherit;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 13px;
+  text-align: center;
+  color: inherit;
+}

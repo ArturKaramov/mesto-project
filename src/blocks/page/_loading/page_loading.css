@@ -1,0 +1,12 @@
+.page_loading {
+  background-color: #000;
+  background-image: url('../../../images/logo.svg');
+  background-size: 30%;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  transition: visibility .4s, opacity .4s linear;
+}
