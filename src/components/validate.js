@@ -36,6 +36,12 @@ function toggleButtonState(inputList, buttonElement) {
     buttonElement.removeAttribute("disabled", "")}
 };
 
+function togglePopupButtonState(popup) {
+  const inputList = Array.from(popup.querySelectorAll('.popup__item'));
+  const buttonElement = popup.querySelector('.popup__button');
+  toggleButtonState(inputList, buttonElement);
+};
+
 const setEventListeners = (formElement, obj) => {
   const inputList = Array.from(formElement.querySelectorAll(obj.inputSelector));
   const buttonElement = formElement.querySelector(obj.submitButtonSelector)
@@ -54,7 +60,7 @@ const enableValidation = (obj) => {
   });
 };
 
-export {showInputError, hideInputError, checkInputValidity, hasInvalidInput, toggleButtonState, setEventListeners, enableValidation};
+export {togglePopupButtonState, enableValidation};
 
 
 

@@ -1,6 +1,5 @@
 const cohortId = 'plus-cohort-18';
 const token = '0d7ca977-0c10-4a5e-b941-b2da84cee22f';
-const pageLoading = document.querySelector('.page_loading');
 
 const config = {
   baseUrl: `https://nomoreparties.co/v1/${cohortId}`,
@@ -10,60 +9,30 @@ const config = {
   }
 };
 
-const pageIsLoading = (isLoading) => {
-  if (isLoading) {
-    pageLoading.style.visibility = 'visible'
-    pageLoading.style.opacity = '1'
-  }
-  else {
-    pageLoading.style.visibility = 'hidden'
-    pageLoading.style.opacity = '0'
-  };
-};
-
-const getUserData = (user) => {
-  return fetch(`${config.baseUrl}/users/me`, {
-    headers: config.headers
-  })
-    .then(res => {
-      if (res.ok) {
-        return res.json()
-      }
-      else {
-        return Promise.reject(`Ошибка: ${res.status}`)
-      };
-    })
-    .then((data) => {
-      user.name.textContent = data.name;
-      user.about.textContent = data.about;
-      user.avatar.src = data.avatar;
-      user.name.setAttribute('data-id', data._id);
-    })
-    .catch((err) => {console.error(err)})
-    .finally(() => pageIsLoading(false))
+const isResponseOk = (response) => {
+  if (response.ok) {return response.json()}
+  else {return Promise.reject(`Ошибка: ${response.status}`)}
 }
 
-const getInitialCards = (callback) => {
-  return fetch(`${config.baseUrl}/cards`, {
-    headers: config.headers
-  })
-    .then(res => {
-      if (res.ok) {
-        return res.json()
-      }
-      else {return Promise.reject(`Ошибка: ${res.status}`)};
+const informResIsNotOk = (err) => {
+  console.error(err)
+  alert(err)
+}
+
+const getInitialData = () => {
+  return Promise.all([
+    fetch(`${config.baseUrl}/users/me`, {
+      headers: config.headers
+    }),
+    fetch(`${config.baseUrl}/cards`, {
+      headers: config.headers
     })
-    .then((cards) => {
-      cards.reverse()
-      cards.forEach((card) => {
-        callback(card)
-      })
-    })
-    .catch((err) => console.error(err))
-    .finally(() => pageIsLoading(false))
+  ])
+    .then(arr => Promise.all(arr.map(res => isResponseOk(res))))
+    .catch((err) => {informResIsNotOk(err)})
 };
 
-const setProfileData = (user, profile) => {
+const setProfileData = (user) => {
   return fetch(`${config.baseUrl}/users/me`, {
     method: 'PATCH',
     headers: config.headers,
@@ -72,17 +41,11 @@ const setProfileData = (user, profile) => {
       about: user.about
     })
   })
-    .then(res => {
-      if (res.ok) {return res.json()}
-      else {return Promise.reject(`Ошибка: ${res.status}`)}
-    })
-    .then((data) => {
-      profile.name.textContent = data.name
-      profile.about.textContent = data.about
-    })
+    .then(res => isResponseOk(res))
+    .catch((err) => {informResIsNotOk(err)})
 };
 
-const postNewCard = (card, callback) => {
+const postNewCard = (card) => {
   return fetch(`${config.baseUrl}/cards`, {
     method: 'POST',
     headers: config.headers,
@@ -91,16 +54,8 @@ const postNewCard = (card, callback) => {
       link: card.link
     })
   })
-    .then(res => {
-      if (res.ok) {
-        return res.json()
-      }
-      else {
-        return Promise.reject(`Ошибка: ${res.status}`)
-      }
-    })
-    .then((card) => {callback(card)})
-    .catch((err) => {console.error(err)})
+  .then(res => isResponseOk(res))
+  .catch((err) => {informResIsNotOk(err)})
 };
 
 const deleteCard = (cardId) => {
@@ -110,26 +65,16 @@ const deleteCard = (cardId) => {
   })
 }
 
-const toggleLike = (cardId, methodType, cardLikes) => {
+const toggleLike = (cardId, methodType) => {
   return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
     method: methodType,
     headers: config.headers
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json()
-    }
-    else {
-      return Promise.reject(`Ошибка: ${res.status}`)
-    }
-  })
-  .then((card) => {
-    cardLikes.textContent = card.likes.length
-  })
-  .catch((err) => console.error(err))
+  .then(res => isResponseOk(res))
+  .catch((err) => {informResIsNotOk(err)})
 };
 
-const updateAvatar = (url, photo) => {
+const updateAvatar = (url) => {
   return fetch (`${config.baseUrl}/users/me/avatar`, {
     method: 'PATCH',
     headers: config.headers,
@@ -137,16 +82,10 @@ const updateAvatar = (url, photo) => {
       avatar: url
     })
   })
-    .then(res => {
-      if (res.ok) {
-        return res.json()
-      }
-      else {return Promise.reject(`Ошибка: ${res.status}`)};
-    })
-    .then((data) => {photo.src = data.avatar})
+    .then(res => isResponseOk(res))
     .catch((err) => console.error(err))
 };
 
-export {getUserData, getInitialCards, setProfileData, postNewCard, deleteCard, toggleLike, updateAvatar}
+export {getInitialData, setProfileData, postNewCard, deleteCard, toggleLike, updateAvatar}
 
 

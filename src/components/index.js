@@ -2,29 +2,15 @@ import '../styles/index.css';
 
 import {renderCard} from './card.js';
 
-import {popupList, openPopup, closePopup, togglePopupButtonState, popupIsLoading} from './modal.js'
+import {openPopup, closePopup, popupIsLoading} from './modal.js'
 
-import {enableValidation} from './validate.js';
+import {enableValidation, togglePopupButtonState} from './validate.js';
 
-import {getUserData, getInitialCards, setProfileData, postNewCard, updateAvatar} from './api';
+import {getInitialData, setProfileData, postNewCard, updateAvatar} from './api';
 
-const popupCloseList = Array.from(document.querySelectorAll('.popup__close'));
-const popupProfile = document.querySelector('.popup-profile');
-const popupElement = document.querySelector('.popup-element');
-const popupAvatar = document.querySelector('.popup-avatar');
-const formAvatar = popupAvatar.querySelector('.popup__form');
-const profileEdit = document.querySelector('.profile__edit-button');
-const elementAdd = document.querySelector('.profile__add-button');
-const formProfile = document.querySelector('.profile-edit');
-const inputName = formProfile.querySelector('.profile-edit__name');
-const inputAbout = formProfile.querySelector('.profile-edit__about');
-const profileName = document.querySelector('.profile__name');
-const profileAbout = document.querySelector('.profile__about');
-const avatarButton = document.querySelector('.profile__avatar-button');
-const profileAvatar = document.querySelector('.profile__avatar');
-const formCard = document.querySelector('.card-add');
-const cardName = formCard.querySelector('.card-add__name');
-const cardLink = formCard.querySelector('.card-add__link');
+import { pageIsLoading } from "./utils.js";
+
+import {popupCloseList, popupProfile, popupElement, popupAvatar, formAvatar, profileEdit, elementAdd, formProfile, inputName, inputAbout, profileName, profileAbout, avatarButton, profileAvatar, formCard, cardName, cardLink, popupList} from "./variables.js"
 
 function addCardHandle(evt) {
   evt.preventDefault();
@@ -32,11 +18,13 @@ function addCardHandle(evt) {
   const cardData = {};
   cardData.name = cardName.value;
   cardData.link = cardLink.value;
-  postNewCard(cardData, renderCard)
-    .finally(() => {
+  postNewCard(cardData)
+    .then((card) => {
+      renderCard(card, userId)
       closePopup(popupElement)
-      popupIsLoading(false, popupElement)
     })
+    .catch((err) => {console.error(err)})
+    .finally(() => {popupIsLoading(false, popupElement)})
   formCard.reset();
 };
 
@@ -46,10 +34,14 @@ function submitProfileForm(evt) {
   const user = {}
   user.name = inputName.value;
   user.about = inputAbout.value;
-  setProfileData(user, {name: profileName, about: profileAbout})
+  setProfileData(user)
+    .then((data) => {
+      profileName.textContent = data.name
+      profileAbout.textContent = data.about
+      closePopup(popupProfile)
+    })
     .finally(() => {
       popupIsLoading(false, popupProfile);
-      closePopup(popupProfile)
     });
 };
 
@@ -57,11 +49,12 @@ function submitAvatarForm(evt) {
   evt.preventDefault();
   popupIsLoading(true, popupAvatar);
   const newAvatar = popupAvatar.querySelector('.popup__item').value;
-  updateAvatar(newAvatar, profileAvatar)
-    .finally(() => {
+  updateAvatar(newAvatar)
+    .then((data) => {
+      profileAvatar.src = data.avatar
       closePopup(popupAvatar)
-      popupIsLoading(false, popupAvatar)
-    });
+    })
+    .finally(() => {popupIsLoading(false, popupAvatar)});
 };
 
 formProfile.addEventListener('submit', submitProfileForm);
@@ -104,10 +97,18 @@ enableValidation({
   inputErrorClass: 'popup__item_type_error'
 });
 
-getUserData({
-  name: profileName,
-  about: profileAbout,
-  avatar: profileAvatar
-});
+let userId;
 
-getInitialCards(renderCard);
+getInitialData()
+  .then(([data, cards]) => {
+    profileName.textContent = data.name;
+    profileAbout.textContent = data.about;
+    profileAvatar.src = data.avatar;
+    userId = data._id;
+    cards.reverse()
+    cards.forEach((card) => {
+      renderCard(card, userId)
+    })
+  })
+  .finally(() => pageIsLoading(false));
+
