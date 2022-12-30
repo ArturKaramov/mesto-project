@@ -1,16 +1,16 @@
 import '../styles/index.css';
 
-import {renderCard} from './card.js';
+import { renderCard, cardToDelete } from './card.js';
 
 import {openPopup, closePopup, popupIsLoading} from './modal.js'
 
 import {enableValidation, togglePopupButtonState} from './validate.js';
 
-import {getInitialData, setProfileData, postNewCard, updateAvatar} from './api';
+import {informResIsNotOk, getInitialData, setProfileData, postNewCard, updateAvatar, deleteCard} from './api';
 
 import { pageIsLoading } from "./utils.js";
 
-import {popupCloseList, popupProfile, popupElement, popupAvatar, formAvatar, profileEdit, elementAdd, formProfile, inputName, inputAbout, profileName, profileAbout, avatarButton, profileAvatar, formCard, cardName, cardLink, popupList} from "./variables.js"
+import {popupCloseList, popupProfile, popupElement, popupAvatar, formAvatar, profileEdit, elementAdd, formProfile, inputName, inputAbout, profileName, profileAbout, avatarButton, profileAvatar, formCard, cardName, cardLink, popupList, buttonDelete, popupDelete } from "./variables.js"
 
 function addCardHandle(evt) {
   evt.preventDefault();
@@ -23,9 +23,8 @@ function addCardHandle(evt) {
       renderCard(card, userId)
       closePopup(popupElement)
     })
-    .catch((err) => {console.error(err)})
+    .catch((err) => {informResIsNotOk(err)})
     .finally(() => {popupIsLoading(false, popupElement)})
-  formCard.reset();
 };
 
 function submitProfileForm(evt) {
@@ -40,9 +39,8 @@ function submitProfileForm(evt) {
       profileAbout.textContent = data.about
       closePopup(popupProfile)
     })
-    .finally(() => {
-      popupIsLoading(false, popupProfile);
-    });
+    .catch((err) => {informResIsNotOk(err)})
+    .finally(() => {popupIsLoading(false, popupProfile)});
 };
 
 function submitAvatarForm(evt) {
@@ -54,6 +52,7 @@ function submitAvatarForm(evt) {
       profileAvatar.src = data.avatar
       closePopup(popupAvatar)
     })
+    .catch((err) => {informResIsNotOk(err)})
     .finally(() => {popupIsLoading(false, popupAvatar)});
 };
 
@@ -63,6 +62,15 @@ formCard.addEventListener('submit', addCardHandle);
 
 formAvatar.addEventListener('submit', submitAvatarForm);
 
+buttonDelete.addEventListener('click', function() {
+  deleteCard(cardToDelete.dataset.id)
+    .then(() => {
+      cardToDelete.remove()
+      closePopup(popupDelete)
+    })
+    .catch((err) => {informResIsNotOk(err)})
+})
+
 profileEdit.addEventListener('click', function () {
   inputName.value = profileName.textContent;
   inputAbout.value = profileAbout.textContent;
@@ -71,6 +79,7 @@ profileEdit.addEventListener('click', function () {
 });
 
 elementAdd.addEventListener('click', function () {
+  formCard.reset();
   openPopup(popupElement);
   togglePopupButtonState(popupElement);
 });
@@ -110,5 +119,6 @@ getInitialData()
       renderCard(card, userId)
     })
   })
+  .catch((err) => {informResIsNotOk(err)})
   .finally(() => pageIsLoading(false));
 

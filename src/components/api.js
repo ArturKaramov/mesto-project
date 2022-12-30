@@ -12,12 +12,12 @@ const config = {
 const isResponseOk = (response) => {
   if (response.ok) {return response.json()}
   else {return Promise.reject(`Ошибка: ${response.status}`)}
-}
+};
 
 const informResIsNotOk = (err) => {
   console.error(err)
   alert(err)
-}
+};
 
 const getInitialData = () => {
   return Promise.all([
@@ -29,7 +29,6 @@ const getInitialData = () => {
     })
   ])
     .then(arr => Promise.all(arr.map(res => isResponseOk(res))))
-    .catch((err) => {informResIsNotOk(err)})
 };
 
 const setProfileData = (user) => {
@@ -42,7 +41,6 @@ const setProfileData = (user) => {
     })
   })
     .then(res => isResponseOk(res))
-    .catch((err) => {informResIsNotOk(err)})
 };
 
 const postNewCard = (card) => {
@@ -55,7 +53,6 @@ const postNewCard = (card) => {
     })
   })
   .then(res => isResponseOk(res))
-  .catch((err) => {informResIsNotOk(err)})
 };
 
 const deleteCard = (cardId) => {
@@ -63,6 +60,7 @@ const deleteCard = (cardId) => {
     method: 'DELETE',
     headers: config.headers
   })
+  .then(res => isResponseOk(res))
 }
 
 const toggleLike = (cardId, methodType) => {
@@ -71,7 +69,6 @@ const toggleLike = (cardId, methodType) => {
     headers: config.headers
   })
   .then(res => isResponseOk(res))
-  .catch((err) => {informResIsNotOk(err)})
 };
 
 const updateAvatar = (url) => {
@@ -83,9 +80,8 @@ const updateAvatar = (url) => {
     })
   })
     .then(res => isResponseOk(res))
-    .catch((err) => console.error(err))
 };
 
-export {getInitialData, setProfileData, postNewCard, deleteCard, toggleLike, updateAvatar}
+export {informResIsNotOk, getInitialData, setProfileData, postNewCard, deleteCard, toggleLike, updateAvatar}
 
 

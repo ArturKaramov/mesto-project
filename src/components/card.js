@@ -1,23 +1,14 @@
-import { closePopup, openPopup } from "./modal.js";
+import { openPopup } from "./modal.js";
 
-import { deleteCard, toggleLike } from "./api.js";
+import { toggleLike } from "./api.js";
 
-const templateElement = document.querySelector('.element__template').content;
-const cardsContainer = document.querySelector('.elements__list');
-const popupImg = document.querySelector('.popup-image');
-const popupDelete = document.querySelector('.popup-delete');
-const buttonDelete = popupDelete.querySelector('.popup__button')
-const popupImgPhoto = popupImg.querySelector('.popup-image__image');
-const popupCaption = popupImg.querySelector('.popup-image__caption');
+import {templateElement, cardsContainer, popupImg, popupDelete, popupImgPhoto, popupCaption} from "./variables.js"
 
-const handleDeleteButton = (evt) => {
-  const cardToDelete = evt.target.closest('.element');
+let cardToDelete = null;
+
+const openDeletePopup = (evt) => {
+  cardToDelete = evt.target.closest('.element');
   openPopup(popupDelete);
-  buttonDelete.addEventListener('click', function() {
-    cardToDelete.remove();
-    deleteCard(cardToDelete.getAttribute('data-id'));
-    closePopup(popupDelete);
-  })
 };
 
 const handleLikeButton = (evt) => {
@@ -51,14 +42,13 @@ function createCard(cardData, id) {
   if (cardData.likes) {
     card.querySelector('.element__likes-number').textContent = cardData.likes.length;
     if (cardData.likes.some(function (like) {
-      return like['_id'] === id;
+      return like._id === id;
     })) {cardLike.classList.add('element__like_active')}
   };
   cardLike.addEventListener('click', handleLikeButton);
-  cardTrash.addEventListener('click', handleDeleteButton);
-  //console.log(id, cardData.owner['_id'])
-  if (cardData.owner['_id'] !== id) {(cardTrash.remove())}
-  if (cardData['_id']) {card.setAttribute('data-id', cardData['_id'])};
+  if (cardData.owner._id !== id) {(cardTrash.remove())}
+  card.dataset.id = cardData._id;
+  cardTrash.addEventListener('click', openDeletePopup);
   cardPhoto.addEventListener('click', function() {
     viewCard(cardData);
   });
@@ -67,4 +57,4 @@ function createCard(cardData, id) {
 
 const renderCard = (cardData, id) => {cardsContainer.prepend(createCard(cardData, id))};
 
-export {templateElement, cardsContainer, popupImg, popupImgPhoto, popupCaption, handleDeleteButton, handleLikeButton, viewCard, createCard, renderCard}
+export {templateElement, cardsContainer, popupImg, popupImgPhoto, popupCaption, handleLikeButton, viewCard, createCard, renderCard, cardToDelete}
