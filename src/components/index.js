@@ -1,16 +1,26 @@
 import '../styles/index.css';
 
-import { renderCard, cardToDelete } from './card.js';
+import { renderCard, cardToDelete, removeCard, changeLikeCondition } from './card.js';
 
 import {openPopup, closePopup, popupIsLoading} from './modal.js'
 
 import {enableValidation, togglePopupButtonState} from './validate.js';
 
-import {informResIsNotOk, getInitialData, setProfileData, postNewCard, updateAvatar, deleteCard} from './api';
+import {informResIsNotOk, getInitialData, setProfileData, postNewCard, updateAvatar, deleteCard, toggleLike} from './api';
 
 import { pageIsLoading } from "./utils.js";
 
 import {popupCloseList, popupProfile, popupElement, popupAvatar, formAvatar, profileEdit, elementAdd, formProfile, inputName, inputAbout, profileName, profileAbout, avatarButton, profileAvatar, formCard, cardName, cardLink, popupList, buttonDelete, popupDelete } from "./variables.js"
+
+function toggleLikeButton(evt) {
+  const card = evt.target.closest('.element');
+  const cardId = card.getAttribute('data-id');
+  let method = null;
+  evt.target.classList.contains('element__like_active') ? method = 'DELETE' : method = 'PUT';
+  toggleLike(cardId, method)
+    .then((data) => {changeLikeCondition(card, data.likes.length)})
+    .catch((err) => {informResIsNotOk(err)})
+};
 
 function addCardHandle(evt) {
   evt.preventDefault();
@@ -20,7 +30,7 @@ function addCardHandle(evt) {
   cardData.link = cardLink.value;
   postNewCard(cardData)
     .then((card) => {
-      renderCard(card, userId)
+      renderCard(card, userId, toggleLikeButton)
       closePopup(popupElement)
     })
     .catch((err) => {informResIsNotOk(err)})
@@ -65,11 +75,11 @@ formAvatar.addEventListener('submit', submitAvatarForm);
 buttonDelete.addEventListener('click', function() {
   deleteCard(cardToDelete.dataset.id)
     .then(() => {
-      cardToDelete.remove()
+      removeCard(cardToDelete)
       closePopup(popupDelete)
     })
     .catch((err) => {informResIsNotOk(err)})
-})
+});
 
 profileEdit.addEventListener('click', function () {
   inputName.value = profileName.textContent;
@@ -116,7 +126,7 @@ getInitialData()
     userId = data._id;
     cards.reverse()
     cards.forEach((card) => {
-      renderCard(card, userId)
+      renderCard(card, userId, toggleLikeButton)
     })
   })
   .catch((err) => {informResIsNotOk(err)})

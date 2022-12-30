@@ -11,17 +11,13 @@ const openDeletePopup = (evt) => {
   openPopup(popupDelete);
 };
 
-const handleLikeButton = (evt) => {
-  const card = evt.target.closest('.element');
-  const cardId = card.getAttribute('data-id');
-  const cardLikes = card.querySelector('.element__likes-number');
-  let method;
-  evt.target.classList.contains('element__like_active') ? method = 'DELETE' : method = 'PUT';
-  toggleLike(cardId, method)
-      .then((card) => {
-        cardLikes.textContent = card.likes.length
-        evt.target.classList.toggle('element__like_active')
-      });
+const removeCard = (card) => {card.remove()}
+
+const changeLikeCondition = (card, likesNum) => {
+  const cardLikesNum = card.querySelector('.element__likes-number');
+  const cardLikeButton = card.querySelector('.element__like');
+  cardLikesNum.textContent = likesNum;
+  cardLikeButton.classList.toggle('element__like_active');
 };
 
 function viewCard(cardData) {
@@ -31,7 +27,7 @@ function viewCard(cardData) {
   openPopup(popupImg);
 };
 
-function createCard(cardData, id) {
+function createCard(cardData, id, likeCallback) {
   const card = templateElement.querySelector('.element').cloneNode(true);
   const cardPhoto = card.querySelector('.element__photo');
   const cardTrash = card.querySelector('.element__delete');
@@ -39,13 +35,11 @@ function createCard(cardData, id) {
   cardPhoto.src = cardData.link;
   cardPhoto.alt = cardData.name;
   card.querySelector('.element__name').textContent = cardData.name;
-  if (cardData.likes) {
-    card.querySelector('.element__likes-number').textContent = cardData.likes.length;
-    if (cardData.likes.some(function (like) {
-      return like._id === id;
-    })) {cardLike.classList.add('element__like_active')}
-  };
-  cardLike.addEventListener('click', handleLikeButton);
+  card.querySelector('.element__likes-number').textContent = cardData.likes.length;
+  if (cardData.likes.some(function (like) {
+    return like._id === id;
+  })) {cardLike.classList.add('element__like_active')};
+  cardLike.addEventListener('click', likeCallback);
   if (cardData.owner._id !== id) {(cardTrash.remove())}
   card.dataset.id = cardData._id;
   cardTrash.addEventListener('click', openDeletePopup);
@@ -55,6 +49,6 @@ function createCard(cardData, id) {
   return card;
 };
 
-const renderCard = (cardData, id) => {cardsContainer.prepend(createCard(cardData, id))};
+const renderCard = (cardData, id, likeCallback) => {cardsContainer.prepend(createCard(cardData, id, likeCallback))};
 
-export {templateElement, cardsContainer, popupImg, popupImgPhoto, popupCaption, handleLikeButton, viewCard, createCard, renderCard, cardToDelete}
+export {templateElement, cardsContainer, popupImg, popupImgPhoto, popupCaption, changeLikeCondition, viewCard, createCard, renderCard, cardToDelete, removeCard}
