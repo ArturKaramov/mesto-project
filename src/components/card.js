@@ -1,8 +1,54 @@
 import { openPopup } from "./modal.js";
 
-import { toggleLike } from "./api.js";
-
 import {templateElement, cardsContainer, popupImg, popupDelete, popupImgPhoto, popupCaption} from "./variables.js"
+
+export default class Card {
+  constructor({name, link, likes, owner, _id}, {deleteCallback, likeCallback}, selector, userId) {
+    this.name = name;
+    this.link = link;
+    this.likes = likes;
+    this.id = owner._id;
+    this.cardId = _id;
+    this._deleteCallback = deleteCallback;
+    this._likeCallback = likeCallback;
+    this.selector = selector;
+    this.userId = userId;
+  }
+
+  _getElement() {
+    const cardElement = document
+      .querySelector(this.selector)
+      .content
+      .querySelector('.element')
+      .cloneNode(true)
+    return cardElement
+  }
+
+  _createCard() {
+    this._element = this._getElement();
+    this._element.dataset.id = this.cardId;
+    this._element.querySelector('.element__photo').src = this.link;
+    this._element.querySelector('.element__photo').alt = this.name;
+    this._element.querySelector('.element__name').textContent = this.name;
+    this._element.querySelector('.element__likes-number').textContent = this.likes.length;
+    if (this.likes.some((like) => {return like._id === this.userId})) {
+      this._element.querySelector('.element__like').classList.add('element__like_active')
+    };
+    this._setEventListeners();
+    if (this.id !== this.userId) {this._element.querySelector('.element__delete').remove()}
+    return this._element
+  }
+
+  _setEventListeners() {
+    this._element.querySelector('.element__delete').addEventListener('click', (evt) => {this._deleteCallback(evt)});
+    this._element.querySelector('.element__like').addEventListener('click', (evt) => {this._likeCallback(evt)});
+  }
+
+  getCard() {
+    return this._createCard()
+  }
+};
+
 
 let cardToDelete = null;
 
@@ -27,28 +73,4 @@ function viewCard(cardData) {
   openPopup(popupImg);
 };
 
-function createCard(cardData, id, likeCallback) {
-  const card = templateElement.querySelector('.element').cloneNode(true);
-  const cardPhoto = card.querySelector('.element__photo');
-  const cardTrash = card.querySelector('.element__delete');
-  const cardLike = card.querySelector('.element__like');
-  cardPhoto.src = cardData.link;
-  cardPhoto.alt = cardData.name;
-  card.querySelector('.element__name').textContent = cardData.name;
-  card.querySelector('.element__likes-number').textContent = cardData.likes.length;
-  if (cardData.likes.some(function (like) {
-    return like._id === id;
-  })) {cardLike.classList.add('element__like_active')};
-  cardLike.addEventListener('click', likeCallback);
-  if (cardData.owner._id !== id) {(cardTrash.remove())}
-  card.dataset.id = cardData._id;
-  cardTrash.addEventListener('click', openDeletePopup);
-  cardPhoto.addEventListener('click', function() {
-    viewCard(cardData);
-  });
-  return card;
-};
-
-const renderCard = (cardData, id, likeCallback) => {cardsContainer.prepend(createCard(cardData, id, likeCallback))};
-
-export {templateElement, cardsContainer, popupImg, popupImgPhoto, popupCaption, changeLikeCondition, viewCard, createCard, renderCard, cardToDelete, removeCard}
+export {templateElement, cardsContainer, popupImg, popupImgPhoto, popupCaption, changeLikeCondition, viewCard, cardToDelete, removeCard, openDeletePopup}

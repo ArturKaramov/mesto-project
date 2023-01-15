@@ -23,3 +23,5 @@ export const popupDelete = document.querySelector('.popup-delete');
 export const popupImgPhoto = popupImg.querySelector('.popup-image__image');
 export const popupCaption = popupImg.querySelector('.popup-image__caption');
 export const buttonDelete = popupDelete.querySelector('.popup__button');
+export const cohortId = 'plus-cohort-18';
+export const token = '0d7ca977-0c10-4a5e-b941-b2da84cee22f';

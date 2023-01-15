@@ -1,12 +1,72 @@
-const cohortId = 'plus-cohort-18';
-const token = '0d7ca977-0c10-4a5e-b941-b2da84cee22f';
+export default class Api {
+  constructor({baseUrl, headers}) {
+    this.url = baseUrl;
+    this.headers = headers;
+  };
 
-const config = {
-  baseUrl: `https://nomoreparties.co/v1/${cohortId}`,
-  headers: {
-    authorization: token,
-    'Content-Type': 'application/json'
+  getInitialData() {
+    return Promise.all([
+      fetch(`${this.url}/users/me`, {
+        headers: this.headers
+      }),
+      fetch(`${this.url}/cards`, {
+        headers: this.headers
+      })
+    ])
+      .then(arr => Promise.all(arr.map(res => isResponseOk(res))))
   }
+
+  setProfileData(user) {
+    return fetch(`${this.url}/users/me`, {
+      method: 'PATCH',
+      headers: this.headers,
+      body: JSON.stringify({
+        name: user.name,
+        about: user.about
+      })
+    })
+      .then(res => isResponseOk(res))
+  };
+
+  postNewCard(card) {
+    return fetch(`${this.url}/cards`, {
+      method: 'POST',
+      headers: this.headers,
+      body: JSON.stringify({
+        name: card.name,
+        link: card.link
+      })
+    })
+    .then(res => isResponseOk(res))
+  };
+
+  deleteCard(cardId) {
+    return fetch(`${this.url}/cards/${cardId}`, {
+      method: 'DELETE',
+      headers: this.headers
+    })
+    .then(res => isResponseOk(res))
+  };
+
+  toggleLike(cardId, methodType) {
+    return fetch(`${this.url}/cards/likes/${cardId}`, {
+      method: methodType,
+      headers: this.headers
+    })
+    .then(res => isResponseOk(res))
+  };
+
+  updateAvatar (url) {
+    return fetch (`${this.url}/users/me/avatar`, {
+      method: 'PATCH',
+      headers: this.headers,
+      body: JSON.stringify({
+        avatar: url
+      })
+    })
+      .then(res => isResponseOk(res))
+  };
+
 };
 
 const isResponseOk = (response) => {
@@ -14,74 +74,9 @@ const isResponseOk = (response) => {
   else {return Promise.reject(`Ошибка: ${response.status}`)}
 };
 
-const informResIsNotOk = (err) => {
+export const informResIsNotOk = (err) => {
   console.error(err)
-  alert(err)
+  //alert(err)
 };
-
-const getInitialData = () => {
-  return Promise.all([
-    fetch(`${config.baseUrl}/users/me`, {
-      headers: config.headers
-    }),
-    fetch(`${config.baseUrl}/cards`, {
-      headers: config.headers
-    })
-  ])
-    .then(arr => Promise.all(arr.map(res => isResponseOk(res))))
-};
-
-const setProfileData = (user) => {
-  return fetch(`${config.baseUrl}/users/me`, {
-    method: 'PATCH',
-    headers: config.headers,
-    body: JSON.stringify({
-      name: user.name,
-      about: user.about
-    })
-  })
-    .then(res => isResponseOk(res))
-};
-
-const postNewCard = (card) => {
-  return fetch(`${config.baseUrl}/cards`, {
-    method: 'POST',
-    headers: config.headers,
-    body: JSON.stringify({
-      name: card.name,
-      link: card.link
-    })
-  })
-  .then(res => isResponseOk(res))
-};
-
-const deleteCard = (cardId) => {
-  return fetch(`${config.baseUrl}/cards/${cardId}`, {
-    method: 'DELETE',
-    headers: config.headers
-  })
-  .then(res => isResponseOk(res))
-}
-
-const toggleLike = (cardId, methodType) => {
-  return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
-    method: methodType,
-    headers: config.headers
-  })
-  .then(res => isResponseOk(res))
-};
-
-const updateAvatar = (url) => {
-  return fetch (`${config.baseUrl}/users/me/avatar`, {
-    method: 'PATCH',
-    headers: config.headers,
-    body: JSON.stringify({
-      avatar: url
-    })
-  })
-    .then(res => isResponseOk(res))
-};
-
-export {informResIsNotOk, getInitialData, setProfileData, postNewCard, deleteCard, toggleLike, updateAvatar}
 
 

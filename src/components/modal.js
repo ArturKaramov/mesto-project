@@ -1,5 +1,3 @@
-import { togglePopupButtonState } from "./validate";
-
 const closePopupWithEsc = (evt) => {if (evt.key === 'Escape') {
   const popupOpened = document.querySelector('.popup_opened');
   closePopup(popupOpened);
@@ -19,4 +17,4 @@ const popupIsLoading = (isLoading, popup) => {
   else {button.textContent = button.getAttribute('data-init')}
 }
 
-export {openPopup, closePopup, togglePopupButtonState, popupIsLoading}
+export {openPopup, closePopup, popupIsLoading}

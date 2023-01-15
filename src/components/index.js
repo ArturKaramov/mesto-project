@@ -1,23 +1,23 @@
 import '../styles/index.css';
 
-import { renderCard, cardToDelete, removeCard, changeLikeCondition } from './card.js';
+import Card, { cardToDelete, removeCard, changeLikeCondition, openDeletePopup } from './card.js';
 
 import {openPopup, closePopup, popupIsLoading} from './modal.js'
 
 import {enableValidation, togglePopupButtonState} from './validate.js';
 
-import {informResIsNotOk, getInitialData, setProfileData, postNewCard, updateAvatar, deleteCard, toggleLike} from './api';
+import Api, {informResIsNotOk} from './api';
 
 import { pageIsLoading } from "./utils.js";
 
-import {popupCloseList, popupProfile, popupElement, popupAvatar, formAvatar, profileEdit, elementAdd, formProfile, inputName, inputAbout, profileName, profileAbout, avatarButton, profileAvatar, formCard, cardName, cardLink, popupList, buttonDelete, popupDelete } from "./variables.js"
+import {popupCloseList, popupProfile, popupElement, popupAvatar, formAvatar, profileEdit, elementAdd, formProfile, inputName, inputAbout, profileName, profileAbout, avatarButton, profileAvatar, formCard, cardName, cardLink, popupList, buttonDelete, popupDelete, cardsContainer, token, cohortId } from "./variables.js"
 
 function toggleLikeButton(evt) {
   const card = evt.target.closest('.element');
   const cardId = card.getAttribute('data-id');
   let method = null;
   evt.target.classList.contains('element__like_active') ? method = 'DELETE' : method = 'PUT';
-  toggleLike(cardId, method)
+  api.toggleLike(cardId, method)
     .then((data) => {changeLikeCondition(card, data.likes.length)})
     .catch((err) => {informResIsNotOk(err)})
 };
@@ -28,9 +28,10 @@ function addCardHandle(evt) {
   const cardData = {};
   cardData.name = cardName.value;
   cardData.link = cardLink.value;
-  postNewCard(cardData)
+  api.postNewCard(cardData)
     .then((card) => {
-      renderCard(card, userId, toggleLikeButton)
+      const cardElement = new Card(card, '.element__template', userId)
+      cardsContainer.prepend(cardElement.getCard());
       closePopup(popupElement)
     })
     .catch((err) => {informResIsNotOk(err)})
@@ -43,7 +44,7 @@ function submitProfileForm(evt) {
   const user = {}
   user.name = inputName.value;
   user.about = inputAbout.value;
-  setProfileData(user)
+  api.setProfileData(user)
     .then((data) => {
       profileName.textContent = data.name
       profileAbout.textContent = data.about
@@ -57,7 +58,7 @@ function submitAvatarForm(evt) {
   evt.preventDefault();
   popupIsLoading(true, popupAvatar);
   const newAvatar = popupAvatar.querySelector('.popup__item').value;
-  updateAvatar(newAvatar)
+  api.updateAvatar(newAvatar)
     .then((data) => {
       profileAvatar.src = data.avatar
       closePopup(popupAvatar)
@@ -73,7 +74,7 @@ formCard.addEventListener('submit', addCardHandle);
 formAvatar.addEventListener('submit', submitAvatarForm);
 
 buttonDelete.addEventListener('click', function() {
-  deleteCard(cardToDelete.dataset.id)
+  api.deleteCard(cardToDelete.dataset.id)
     .then(() => {
       removeCard(cardToDelete)
       closePopup(popupDelete)
@@ -118,7 +119,15 @@ enableValidation({
 
 let userId;
 
-getInitialData()
+const api = new Api({
+  baseUrl: `https://nomoreparties.co/v1/${cohortId}`,
+  headers: {
+    authorization: token,
+    'Content-Type': 'application/json'
+  }
+});
+
+api.getInitialData()
   .then(([data, cards]) => {
     profileName.textContent = data.name;
     profileAbout.textContent = data.about;
@@ -126,7 +135,8 @@ getInitialData()
     userId = data._id;
     cards.reverse()
     cards.forEach((card) => {
-      renderCard(card, userId, toggleLikeButton)
+      const cardElement = new Card(card, {deleteCallback: (evt) => {openDeletePopup(evt)}, likeCallback: (evt) => {toggleLikeButton(evt)}}, '.element__template', userId);
+      cardsContainer.prepend(cardElement.getCard());
     })
   })
   .catch((err) => {informResIsNotOk(err)})
