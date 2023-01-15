@@ -4,13 +4,13 @@ import Card, { cardToDelete, removeCard, changeLikeCondition, openDeletePopup } 
 
 import {openPopup, closePopup, popupIsLoading} from './modal.js'
 
-import {enableValidation, togglePopupButtonState} from './validate.js';
+import FormValidator from './validate.js';
 
 import Api, {informResIsNotOk} from './api';
 
 import { pageIsLoading } from "./utils.js";
 
-import {popupCloseList, popupProfile, popupElement, popupAvatar, formAvatar, profileEdit, elementAdd, formProfile, inputName, inputAbout, profileName, profileAbout, avatarButton, profileAvatar, formCard, cardName, cardLink, popupList, buttonDelete, popupDelete, cardsContainer, token, cohortId } from "./variables.js"
+import {popupCloseList, popupProfile, popupElement, popupAvatar, formAvatar, profileEdit, elementAdd, formProfile, inputName, inputAbout, profileName, profileAbout, avatarButton, profileAvatar, formCard, cardName, cardLink, popupList, buttonDelete, popupDelete, cardsContainer, token, cohortId, validationSettings } from "./variables.js"
 
 function toggleLikeButton(evt) {
   const card = evt.target.closest('.element');
@@ -30,7 +30,7 @@ function addCardHandle(evt) {
   cardData.link = cardLink.value;
   api.postNewCard(cardData)
     .then((card) => {
-      const cardElement = new Card(card, '.element__template', userId)
+      const cardElement = new Card(card, {deleteCallback: (evt) => {openDeletePopup(evt)}, likeCallback: (evt) => {toggleLikeButton(evt)}}, '.element__template', userId);
       cardsContainer.prepend(cardElement.getCard());
       closePopup(popupElement)
     })
@@ -86,18 +86,21 @@ profileEdit.addEventListener('click', function () {
   inputName.value = profileName.textContent;
   inputAbout.value = profileAbout.textContent;
   openPopup(popupProfile);
-  togglePopupButtonState(popupProfile);
+  const form = new FormValidator(validationSettings, {form: popupProfile.querySelector('.popup__form')})
+  form.togglePopupButtonState(popupProfile);
 });
 
 elementAdd.addEventListener('click', function () {
   formCard.reset();
   openPopup(popupElement);
-  togglePopupButtonState(popupElement);
+  const form = new FormValidator(validationSettings, {form: popupElement.querySelector('.popup__form')})
+  form.togglePopupButtonState(popupElement);
 });
 
 avatarButton.addEventListener('click', function() {
   openPopup(popupAvatar);
-  togglePopupButtonState(popupAvatar);
+  const form = new FormValidator(validationSettings, {form: popupAvatar.querySelector('.popup__form')})
+  form.togglePopupButtonState(popupAvatar);
 });
 
 popupList.forEach(function(popup) {
@@ -110,12 +113,10 @@ popupCloseList.forEach((closeButton) => {
   closeButton.addEventListener('click', (evt) => {closePopup(evt.target.closest('.popup'))})
 })
 
-enableValidation({
-  formSelector: '.popup__form',
-  inputSelector: '.popup__item',
-  submitButtonSelector: '.popup__button',
-  inputErrorClass: 'popup__item_type_error'
-});
+for (let i = 0; i < document.forms.length; i++) {
+  const form =  new FormValidator(validationSettings, {form: document.forms[i]});
+  form.enableValidation();
+}
 
 let userId;
 

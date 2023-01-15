@@ -25,3 +25,9 @@ export const popupCaption = popupImg.querySelector('.popup-image__caption');
 export const buttonDelete = popupDelete.querySelector('.popup__button');
 export const cohortId = 'plus-cohort-18';
 export const token = '0d7ca977-0c10-4a5e-b941-b2da84cee22f';
+export const validationSettings = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__item',
+  submitButtonSelector: '.popup__button',
+  inputErrorClass: 'popup__item_type_error'
+};
