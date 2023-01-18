@@ -19,8 +19,9 @@ Mesto: интерактивная страница, куда можно доба
 - [Webpack](https://webpack.js.org/)
 - [Методология БЭМ](https://ru.bem.info/methodology/)
 
-# Проект на GitHub Pages
-[Ссылка](https://arturkaramov.github.io/mesto-project/)
+# Проекты на GitHub Pages
+[Карамов Артур](https://arturkaramov.github.io/mesto-project/)
+[Моругин Александр](https://github.com/AlexanderMorugin/mesto-project)
 
 # Автор проекта
 [Карамов Артур](https://github.com/ArturKaramov)
