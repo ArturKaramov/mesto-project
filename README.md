@@ -20,8 +20,8 @@ Mesto: интерактивная страница, куда можно доба
 - [Методология БЭМ](https://ru.bem.info/methodology/)
 
 # Проекты на GitHub Pages
-[Карамов Артур](https://arturkaramov.github.io/mesto-project/)
-[Моругин Александр](https://github.com/AlexanderMorugin/mesto-project)
+- [Карамов Артур](https://arturkaramov.github.io/mesto-project/)
+- [Моругин Александр](https://github.com/AlexanderMorugin/mesto-project)
 
-# Автор проекта
-[Карамов Артур](https://github.com/ArturKaramov)
+# Авторы проекта
+Карамов Артур, Моругин Александр - студенты Яндекс Практикума, 18-я когорта. 2023г.
