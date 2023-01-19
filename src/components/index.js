@@ -2,8 +2,6 @@ import '../styles/index.css';
 
 import { renderCard, cardToDelete, removeCard, changeLikeCondition } from './card.js';
 
-import {openPopup, closePopup, popupIsLoading} from './modal.js'
-
 import { pageIsLoading } from "./utils.js";
 
 import {popupCloseList, popupProfile, popupElement, popupAvatar, formAvatar, profileEdit, elementAdd, formProfile, inputName, inputAbout, profileName, profileAbout, avatarButton, profileAvatar, formCard, cardName, cardLink, popupList, buttonDelete, popupDelete } from "./variables.js"
@@ -14,6 +12,7 @@ import {popupCloseList, popupProfile, popupElement, popupAvatar, formAvatar, pro
 
 import { api } from '../components/oop/Api.js';
 import { validator } from '../components/oop/FormValidator.js';
+import { popup } from '../components/oop/Popup.js';
 
 
 function toggleLikeButton(evt) {
@@ -28,23 +27,24 @@ function toggleLikeButton(evt) {
 
 function addCardHandle(evt) {
   evt.preventDefault();
-  popupIsLoading(true, popupElement);
+  popup.popupIsLoading(true, popupElement); // изменено Александром, перед вызовом функции добавлено popup.
   const cardData = {};
   cardData.name = cardName.value;
   cardData.link = cardLink.value;
   api.postNewCard(cardData) // изменено Александром, перед вызовом функции добавлено api.
     .then((card) => {
       renderCard(card, userId, toggleLikeButton)
-      closePopup(popupElement)
+      // closePopup(popupElement) // старый код закрытия
+      popup.close(popupElement); // изменено Александром, перед вызовом функции добавлено popup.close.
       console.log(card); // добавлено Александром
     })
     .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
-    .finally(() => {popupIsLoading(false, popupElement)})
+    .finally(() => {popup.popupIsLoading(false, popupElement)}) // изменено Александром, перед вызовом функции добавлено popup.
 };
 
 function submitProfileForm(evt) {
   evt.preventDefault();
-  popupIsLoading(true, popupProfile);
+  popup.popupIsLoading(true, popupProfile); // изменено Александром, перед вызовом функции добавлено popup.
   const user = {}
   user.name = inputName.value;
   user.about = inputAbout.value;
@@ -52,25 +52,27 @@ function submitProfileForm(evt) {
     .then((data) => {
       profileName.textContent = data.name
       profileAbout.textContent = data.about
-      closePopup(popupProfile)
+      // closePopup(popupProfile) // старый код закрытия
+      popup.close(popupProfile); // изменено Александром, перед вызовом функции добавлено popup.close.
       console.log(data); // добавлено Александром
     })
     .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
-    .finally(() => {popupIsLoading(false, popupProfile)});
+    .finally(() => {popup.popupIsLoading(false, popupProfile)}); // изменено Александром, перед вызовом функции добавлено popup.
 };
 
 function submitAvatarForm(evt) {
   evt.preventDefault();
-  popupIsLoading(true, popupAvatar);
+  popup.popupIsLoading(true, popupAvatar); // изменено Александром, перед вызовом функции добавлено popup.
   const newAvatar = popupAvatar.querySelector('.popup__item').value;
   api.updateAvatar(newAvatar) // изменено Александром, перед вызовом функции добавлено api.
     .then((data) => {
       profileAvatar.src = data.avatar
-      closePopup(popupAvatar)
+      // closePopup(popupAvatar) // старый код закрытия
+      popup.close(popupAvatar); // изменено Александром, перед вызовом функции добавлено popup.close.
       console.log(data); // добавлено Александром
     })
     .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
-    .finally(() => {popupIsLoading(false, popupAvatar)});
+    .finally(() => {popup.popupIsLoading(false, popupAvatar)}); // изменено Александром, перед вызовом функции добавлено popup.
 };
 
 formProfile.addEventListener('submit', submitProfileForm);
@@ -83,7 +85,8 @@ buttonDelete.addEventListener('click', function() {
   api.deleteCard(cardToDelete.dataset.id) // изменено Александром, перед вызовом функции добавлено api.
     .then(() => {
       removeCard(cardToDelete)
-      closePopup(popupDelete)
+      // closePopup(popupDelete) // старый код закрытия
+      popup.close(popupDelete); // изменено Александром, перед вызовом функции добавлено popup.close.
     })
     .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
 });
@@ -91,29 +94,38 @@ buttonDelete.addEventListener('click', function() {
 profileEdit.addEventListener('click', function () {
   inputName.value = profileName.textContent;
   inputAbout.value = profileAbout.textContent;
-  openPopup(popupProfile);
+  // openPopup(popupProfile); // старый код открытия
+  popup.open(popupProfile); // изменено Александром, перед вызовом функции добавлено popup.open.
   validator._togglePopupButtonState(popupProfile); // изменено Александром, перед вызовом функции добавлено validator.
 });
 
 elementAdd.addEventListener('click', function () {
   formCard.reset();
-  openPopup(popupElement);
+  // openPopup(popupElement); // старый код открытия
+  popup.open(popupElement); // изменено Александром, перед вызовом функции добавлено popup.open.
   validator._togglePopupButtonState(popupElement); // изменено Александром, перед вызовом функции добавлено validator.
 });
 
 avatarButton.addEventListener('click', function() {
-  openPopup(popupAvatar);
+  // openPopup(popupAvatar); // старый код открытия
+  popup.open(popupAvatar); // изменено Александром, перед вызовом функции добавлено popup.open.
   validator._togglePopupButtonState(popupAvatar); // изменено Александром, перед вызовом функции добавлено validator.
 });
 
-popupList.forEach(function(popup) {
-  popup.addEventListener('mousedown', function(evt) {
-    if (evt.target === evt.currentTarget) {closePopup(popup)}
+popupList.forEach(function(item) {
+  item.addEventListener('mousedown', function(evt) {
+    if (evt.target === evt.currentTarget) {
+      // closePopup(popup); // старый код
+      popup.close(item); // изменено Александром, перед вызовом функции добавлено popup.close.
+    }
   });
 });
 
 popupCloseList.forEach((closeButton) => {
-  closeButton.addEventListener('click', (evt) => {closePopup(evt.target.closest('.popup'))})
+  closeButton.addEventListener('click', (evt) => {
+    // closePopup(evt.target.closest('.popup')) // старый код
+    popup.close(evt.target.closest('.popup')) // изменено Александром, перед вызовом функции добавлено popup.close.
+  })
 })
 
 validator.enableValidation({ // изменено Александром, перед вызовом функции добавлено validator.
@@ -145,6 +157,7 @@ api.getInitialData() // изменено Александром, перед вы
 
 // import {informResIsNotOk, getInitialData, setProfileData, postNewCard, updateAvatar, deleteCard, toggleLike} from './api';
 // import {enableValidation, togglePopupButtonState} from './validate.js';
+// import {openPopup, closePopup, popupIsLoading} from './modal.js'
 
 
 // function toggleLikeButton(evt) {

@@ -7,3 +7,47 @@
 // Содержит публичный метод setEventListeners, который добавляет слушатель клика иконке закрытия попапа.
 // Модальное окно также закрывается при клике на затемнённую область вокруг формы.
 
+class Popup {
+  constructor(selector) {
+    this.selector = selector;
+  }
+
+  open(selector) {
+    selector.classList.add('popup_opened');
+    document.addEventListener('keydown', this._handleEscClose);
+  }
+
+  close(selector) {
+    selector.classList.remove('popup_opened');
+    document.removeEventListener('keydown', this._handleEscClose);
+  }
+
+  _handleEscClose(evt) {
+    if (evt.key === 'Escape') {
+      const openedPopup = document.querySelector('.popup_opened');
+      popup.close(openedPopup);
+    }
+  }
+
+  popupIsLoading(isLoading, popup) {
+    const button = popup.querySelector('.popup__button');
+
+    if (isLoading) {
+      button.textContent = button.getAttribute('data-load')
+    } else {
+      button.textContent = button.getAttribute('data-init')
+    }
+  }
+  // setEventListeners() { // не получается
+  //   document.querySelector('.popup__close').addEventListener('click', () => {
+  //     this.close(openedPopup);
+  //   });
+  //   document.addEventListener('mousedown', (evt) => {
+  //     if (evt.target.classList.contains('popup_opened')) {
+  //       this.close();
+  //     }
+  //   });
+  // }
+}
+
+export const popup = new Popup();
