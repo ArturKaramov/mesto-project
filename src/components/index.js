@@ -4,8 +4,6 @@ import { renderCard, cardToDelete, removeCard, changeLikeCondition } from './car
 
 import {openPopup, closePopup, popupIsLoading} from './modal.js'
 
-import {enableValidation, togglePopupButtonState} from './validate.js';
-
 import { pageIsLoading } from "./utils.js";
 
 import {popupCloseList, popupProfile, popupElement, popupAvatar, formAvatar, profileEdit, elementAdd, formProfile, inputName, inputAbout, profileName, profileAbout, avatarButton, profileAvatar, formCard, cardName, cardLink, popupList, buttonDelete, popupDelete } from "./variables.js"
@@ -15,6 +13,7 @@ import {popupCloseList, popupProfile, popupElement, popupAvatar, formAvatar, pro
 //  M E S T O   -   O O P
 
 import { api } from '../components/oop/Api.js';
+import { validator } from '../components/oop/FormValidator.js';
 
 
 function toggleLikeButton(evt) {
@@ -93,18 +92,18 @@ profileEdit.addEventListener('click', function () {
   inputName.value = profileName.textContent;
   inputAbout.value = profileAbout.textContent;
   openPopup(popupProfile);
-  togglePopupButtonState(popupProfile);
+  validator._togglePopupButtonState(popupProfile); // изменено Александром, перед вызовом функции добавлено validator.
 });
 
 elementAdd.addEventListener('click', function () {
   formCard.reset();
   openPopup(popupElement);
-  togglePopupButtonState(popupElement);
+  validator._togglePopupButtonState(popupElement); // изменено Александром, перед вызовом функции добавлено validator.
 });
 
 avatarButton.addEventListener('click', function() {
   openPopup(popupAvatar);
-  togglePopupButtonState(popupAvatar);
+  validator._togglePopupButtonState(popupAvatar); // изменено Александром, перед вызовом функции добавлено validator.
 });
 
 popupList.forEach(function(popup) {
@@ -117,7 +116,7 @@ popupCloseList.forEach((closeButton) => {
   closeButton.addEventListener('click', (evt) => {closePopup(evt.target.closest('.popup'))})
 })
 
-enableValidation({
+validator.enableValidation({ // изменено Александром, перед вызовом функции добавлено validator.
   formSelector: '.popup__form',
   inputSelector: '.popup__item',
   submitButtonSelector: '.popup__button',
@@ -145,6 +144,8 @@ api.getInitialData() // изменено Александром, перед вы
 //  M E S T O   -   A P I
 
 // import {informResIsNotOk, getInitialData, setProfileData, postNewCard, updateAvatar, deleteCard, toggleLike} from './api';
+// import {enableValidation, togglePopupButtonState} from './validate.js';
+
 
 // function toggleLikeButton(evt) {
 //   const card = evt.target.closest('.element');
