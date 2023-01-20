@@ -1,9 +1,5 @@
-import { openPopup } from "./modal.js";
-
-import {templateElement, cardsContainer, popupImg, popupDelete, popupImgPhoto, popupCaption} from "./variables.js"
-
 export default class Card {
-  constructor({name, link, likes, owner, _id}, {deleteCallback, likeCallback}, selector, userId) {
+  constructor({name, link, likes, owner, _id}, {deleteCallback, likeCallback, handleCardClick}, selector, userId) {
     this.name = name;
     this.link = link;
     this.likes = likes;
@@ -11,6 +7,7 @@ export default class Card {
     this.cardId = _id;
     this._deleteCallback = deleteCallback;
     this._likeCallback = likeCallback;
+    this._handleCardClick = handleCardClick;
     this.selector = selector;
     this.userId = userId;
   }
@@ -42,22 +39,13 @@ export default class Card {
   _setEventListeners() {
     this._element.querySelector('.element__delete').addEventListener('click', (evt) => {this._deleteCallback(evt)});
     this._element.querySelector('.element__like').addEventListener('click', (evt) => {this._likeCallback(evt)});
+    this._element.querySelector('.element__photo').addEventListener('click', () => {this._handleCardClick(this.name, this.link)});
   }
 
   getCard() {
     return this._createCard()
   }
 };
-
-
-let cardToDelete = null;
-
-const openDeletePopup = (evt) => {
-  cardToDelete = evt.target.closest('.element');
-  openPopup(popupDelete);
-};
-
-const removeCard = (card) => {card.remove()}
 
 const changeLikeCondition = (card, likesNum) => {
   const cardLikesNum = card.querySelector('.element__likes-number');
@@ -66,11 +54,4 @@ const changeLikeCondition = (card, likesNum) => {
   cardLikeButton.classList.toggle('element__like_active');
 };
 
-function viewCard(cardData) {
-  popupImgPhoto.src = cardData.link;
-  popupImgPhoto.alt = cardData.name;
-  popupCaption.textContent = cardData.name;
-  openPopup(popupImg);
-};
-
-export {templateElement, cardsContainer, popupImg, popupImgPhoto, popupCaption, changeLikeCondition, viewCard, cardToDelete, removeCard, openDeletePopup}
+export { changeLikeCondition }

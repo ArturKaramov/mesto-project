@@ -31,3 +31,11 @@ export const validationSettings = {
   submitButtonSelector: '.popup__button',
   inputErrorClass: 'popup__item_type_error'
 };
+
+export const popups = {
+  profilePopup: '.popup-profile',
+  elementPopup: '.popup-element',
+  avatarPopup: '.popup-avatar',
+  imagePopup: '.popup-image',
+  deletePopup: '.popup-delete'
+};
