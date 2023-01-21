@@ -7,18 +7,25 @@
 // Содержит публичный метод setEventListeners, который добавляет слушатель клика иконке закрытия попапа.
 // Модальное окно также закрывается при клике на затемнённую область вокруг формы.
 
-class Popup {
+export class Popup {
   constructor(selector) {
     this.selector = selector;
+    this.element = document.querySelector(selector);
+
+    this._handleEscClose = this._handleEscClose.bind(this);
   }
 
   open(selector) {
     selector.classList.add('popup_opened');
+    // this.element.classList.add('popup_opened');
+    // document.classList.add('popup_opened');
     document.addEventListener('keydown', this._handleEscClose);
   }
 
   close(selector) {
     selector.classList.remove('popup_opened');
+    // this.element.classList.remove('popup_opened');
+    // document.classList.remove('popup_opened');
     document.removeEventListener('keydown', this._handleEscClose);
   }
 
@@ -38,16 +45,23 @@ class Popup {
       button.textContent = button.getAttribute('data-init')
     }
   }
-  // setEventListeners() { // не получается
-  //   document.querySelector('.popup__close').addEventListener('click', () => {
-  //     this.close(openedPopup);
-  //   });
-  //   document.addEventListener('mousedown', (evt) => {
-  //     if (evt.target.classList.contains('popup_opened')) {
-  //       this.close();
-  //     }
-  //   });
-  // }
+  setEventListeners() { // не получается
+
+    // this._popup.querySelector('.popup__close').addEventListener('click', (event) => this.close(event));
+    // this._popup.addEventListener('mousedown', (event) => this._handleOverlayClose(event));
+
+
+    document.querySelector('.popup__close').addEventListener('click', (evt) => {
+      popup.close(evt);
+    });
+     document.addEventListener('mousedown', this.close)
+
+    // document.addEventListener('mousedown', (evt) => {
+    //   if (evt.target.classList.contains('popup_opened')) {
+    //     this.close();
+    //   }
+    // });
+  }
 }
 
 export const popup = new Popup();
