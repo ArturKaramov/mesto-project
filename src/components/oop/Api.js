@@ -34,7 +34,7 @@ class Api {
 
   informResIsNotOk(err) {
     console.error(err)
-    alert(err)
+    //alert(err) //изенено Артуром, пока закомментил - мешает)
   }
 
   getInitialData() {

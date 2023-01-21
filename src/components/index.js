@@ -4,7 +4,7 @@ import { renderCard, cardToDelete, removeCard, changeLikeCondition } from './car
 
 import { pageIsLoading } from "./utils.js";
 
-import {popupCloseList, popupProfile, popupElement, popupAvatar, formAvatar, profileEdit, elementAdd, formProfile, inputName, inputAbout, profileName, profileAbout, avatarButton, profileAvatar, formCard, cardName, cardLink, popupList, buttonDelete, popupDelete } from "./variables.js"
+import {popupCloseList, popupProfile, popupElement, popupAvatar, formAvatar, profileEdit, elementAdd, formProfile, inputName, inputAbout, profileName, profileAbout, avatarButton, profileAvatar, formCard, cardName, cardLink, popupList, buttonDelete, popupDelete, cardsContainer } from "./variables.js"
 
 
 
@@ -13,7 +13,9 @@ import {popupCloseList, popupProfile, popupElement, popupAvatar, formAvatar, pro
 import { api } from '../components/oop/Api.js';
 import { validator } from '../components/oop/FormValidator.js';
 import { popup } from '../components/oop/Popup.js';
-
+import Card from './oop/Card';
+import Section from './oop/Section';
+import UserInfo from './oop/UserInfo';
 
 function toggleLikeButton(evt) {
   const card = evt.target.closest('.element');
@@ -32,12 +34,16 @@ function addCardHandle(evt) {
   cardData.name = cardName.value;
   cardData.link = cardLink.value;
   api.postNewCard(cardData) // изменено Александром, перед вызовом функции добавлено api.
-    .then((card) => {
-      renderCard(card, userId, toggleLikeButton)
-      // closePopup(popupElement) // старый код закрытия
-      popup.close(popupElement); // изменено Александром, перед вызовом функции добавлено popup.close.
-      console.log(card); // добавлено Александром
-    })
+    .then((card) => { //изменено Артуром, добавление карточки с помощью классов
+      const cardElement = new Card(card,
+        {
+          deleteCallback: (evt) => { console.log(evt.target)},
+          likeCallback: (evt) => { console.log(evt.target) },
+          handleCardClick: (cardName, cardLink) => { console.log(cardName, cardLink) } //изменено Артуром, пока без коллбэков, функции будут обращаться к попапам
+        }, '.element__template', userId);
+      cardsSection.addItem(cardElement.getCard())
+      popup.close(popupElement)} // изменено Александром, перед вызовом функции добавлено popup.close.
+    )
     .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
     .finally(() => {popup.popupIsLoading(false, popupElement)}) // изменено Александром, перед вызовом функции добавлено popup.
 };
@@ -74,6 +80,8 @@ function submitAvatarForm(evt) {
     .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
     .finally(() => {popup.popupIsLoading(false, popupAvatar)}); // изменено Александром, перед вызовом функции добавлено popup.
 };
+
+const userInfo = new UserInfo({nameSelector: '.profile__name', aboutSelector: '.profile__about'}); //изменено Артуром, создание экземпляра класса UserSection
 
 formProfile.addEventListener('submit', submitProfileForm);
 
@@ -136,18 +144,26 @@ validator.enableValidation({ // изменено Александром, пер�
 });
 
 let userId;
+let cardsSection; //изменено Артуром, секция карточек, инициализировано в глобальной области
 
 api.getInitialData() // изменено Александром, перед вызовом функции добавлено api.
   .then(([data, cards]) => {
-    profileName.textContent = data.name;
-    profileAbout.textContent = data.about;
+    userInfo.setUserInfo(data); //изменено Артуром, получение от сервера и добавление на страницу данных name и about
     profileAvatar.src = data.avatar;
     userId = data._id;
     cards.reverse()
-    cards.forEach((card) => {
-      renderCard(card, userId, toggleLikeButton)
-      console.log(card);
-    })
+    cardsSection = new Section({
+      items: cards,
+      renderer: (item) => {
+        const cardElement = new Card(item,
+        {
+          deleteCallback: (evt) => { console.log(evt.target)},
+          likeCallback: (evt) => { console.log(evt.target) },
+          handleCardClick: (cardName, cardLink) => { console.log(cardName, cardLink) } //изменено Артуром, пока без коллбэков, функции будут обращаться к попапам
+        }, '.element__template', userId);
+        cardsContainer.prepend(cardElement.getCard());
+      }}, '.elements__list');
+    cardsSection.renderItems() //изменено Артуром, добавление начальных карточек через классы
   })
   .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
   .finally(() => pageIsLoading(false));
