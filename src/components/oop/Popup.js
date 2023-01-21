@@ -10,29 +10,24 @@
 export class Popup {
   constructor(selector) {
     this.selector = selector;
-    this.element = document.querySelector(selector);
 
     this._handleEscClose = this._handleEscClose.bind(this);
   }
 
   open(selector) {
     selector.classList.add('popup_opened');
-    // this.element.classList.add('popup_opened');
-    // document.classList.add('popup_opened');
     document.addEventListener('keydown', this._handleEscClose);
   }
 
   close(selector) {
     selector.classList.remove('popup_opened');
-    // this.element.classList.remove('popup_opened');
-    // document.classList.remove('popup_opened');
     document.removeEventListener('keydown', this._handleEscClose);
   }
 
   _handleEscClose(evt) {
     if (evt.key === 'Escape') {
-      const openedPopup = document.querySelector('.popup_opened');
-      popup.close(openedPopup);
+      this.openedPopup = document.querySelector('.popup_opened');
+      this.close(this.openedPopup);
     }
   }
 
@@ -45,23 +40,13 @@ export class Popup {
       button.textContent = button.getAttribute('data-init')
     }
   }
-  setEventListeners() { // не получается
 
-    // this._popup.querySelector('.popup__close').addEventListener('click', (event) => this.close(event));
-    // this._popup.addEventListener('mousedown', (event) => this._handleOverlayClose(event));
-
-
-    document.querySelector('.popup__close').addEventListener('click', (evt) => {
-      popup.close(evt);
-    });
-     document.addEventListener('mousedown', this.close)
-
-    // document.addEventListener('mousedown', (evt) => {
-    //   if (evt.target.classList.contains('popup_opened')) {
-    //     this.close();
-    //   }
-    // });
-  }
+  // setEventListeners() { // не получается где то использовать
+  //   document.querySelector('.popup__close').addEventListener('click', (evt) => {
+  //     popup.close(evt);
+  //   });
+  //    document.addEventListener('mousedown', this.close)
+  // }
 }
 
 export const popup = new Popup();

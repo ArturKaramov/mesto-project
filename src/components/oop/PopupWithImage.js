@@ -5,26 +5,24 @@
 
 import { Popup } from './Popup.js';
 
-class PopupWithImage extends Popup {
+export class PopupWithImage extends Popup {
   constructor(selector) {
     super(selector);
 
-    // this.popupImgPhoto = this.element.querySelector('.popup-image__image');
-    // this.popupCaption = this.element.querySelector('.popup-image__caption');
+    this._handleEscClose = this._handleEscClose.bind(this);
 
+    this.imgPopup = document.querySelector('.popup-image');
     this.popupImgPhoto = document.querySelector('.popup-image__image');
     this.popupCaption = document.querySelector('.popup-image__caption');
   }
-  open(data) {
-    super.open();
-    this.popupImgPhoto.src = data.link;
-    this.popupImgPhoto.alt = data.name;
-    this.popupCaption.textContent = data.name;
 
-    // this.popupImgPhoto.src = cardData.link;
-    // this.popupImgPhoto.alt = cardData.name;
-    // this.popupCaption.textContent = cardData.name;
+  open(name, link) {
+    this.popupImgPhoto.src = link;
+    this.popupImgPhoto.alt = name;
+    this.popupCaption.textContent = name;
+
+    super.open(this.imgPopup);
   }
 }
 
-export const popupImage = new PopupWithImage('.popup-image');
+export const popupImage = new PopupWithImage();

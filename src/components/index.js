@@ -10,9 +10,10 @@ import {popupCloseList, popupProfile, popupElement, popupAvatar, formAvatar, pro
 
 //  M E S T O   -   O O P
 
-import { api } from '../components/oop/Api.js';
-import { validator } from '../components/oop/FormValidator.js';
-import { popup } from '../components/oop/Popup.js';
+import { api } from './oop/Api.js';
+import { validator } from './oop/FormValidator.js';
+import { popup } from './oop/Popup.js';
+import { popupImage } from './oop/PopupWithImage.js';
 import Card from './oop/Card';
 import Section from './oop/Section';
 import UserInfo from './oop/UserInfo';
@@ -159,7 +160,11 @@ api.getInitialData() // изменено Александром, перед вы
         {
           deleteCallback: (evt) => { console.log(evt.target)},
           likeCallback: (evt) => { console.log(evt.target) },
-          handleCardClick: (cardName, cardLink) => { console.log(cardName, cardLink) } //изменено Артуром, пока без коллбэков, функции будут обращаться к попапам
+          handleCardClick: (cardName, cardLink) => { //изменено Артуром, пока без коллбэков, функции будут обращаться к попапам
+
+            popupImage.open(cardName, cardLink); // добавлено Александром - открытие попапа с картинкой
+
+            console.log(cardName, cardLink) }
         }, '.element__template', userId);
         cardsContainer.prepend(cardElement.getCard());
       }}, '.elements__list');
