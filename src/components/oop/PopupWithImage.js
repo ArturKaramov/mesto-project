@@ -9,8 +9,6 @@ export class PopupWithImage extends Popup {
   constructor(selector) {
     super(selector);
 
-    this._handleEscClose = this._handleEscClose.bind(this);
-
     this.imgPopup = document.querySelector('.popup-image');
     this.popupImgPhoto = document.querySelector('.popup-image__image');
     this.popupCaption = document.querySelector('.popup-image__caption');

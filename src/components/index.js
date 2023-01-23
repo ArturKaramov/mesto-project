@@ -1,7 +1,5 @@
 import '../styles/index.css';
 
-import { renderCard, cardToDelete, removeCard, changeLikeCondition } from './card.js';
-
 import { pageIsLoading } from "./utils.js";
 
 import {popupCloseList, popupProfile, popupElement, popupAvatar, formAvatar, profileEdit, elementAdd, formProfile, inputName, inputAbout, profileName, profileAbout, avatarButton, profileAvatar, formCard, cardName, cardLink, popupList, buttonDelete, popupDelete, cardsContainer } from "./variables.js"
@@ -13,6 +11,7 @@ import {popupCloseList, popupProfile, popupElement, popupAvatar, formAvatar, pro
 import { api } from './oop/Api.js';
 import { validator } from './oop/FormValidator.js';
 import { popup } from './oop/Popup.js';
+import { popupForm } from './oop/PopupWithForm.js';
 import { popupImage } from './oop/PopupWithImage.js';
 import Card from './oop/Card';
 import Section from './oop/Section';
@@ -43,8 +42,9 @@ function addCardHandle(evt) {
           handleCardClick: (cardName, cardLink) => { console.log(cardName, cardLink) } //изменено Артуром, пока без коллбэков, функции будут обращаться к попапам
         }, '.element__template', userId);
       cardsSection.addItem(cardElement.getCard())
-      popup.close(popupElement)} // изменено Александром, перед вызовом функции добавлено popup.close.
-    )
+      // popup.close(popupElement) // изменено Александром, перед вызовом функции добавлено popup.close.
+      popupForm.close(popupElement); // изменено Александром, перед вызовом функции добавлено popupForm.close (закрывает попап и обнуляет инпуты)
+    })
     .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
     .finally(() => {popup.popupIsLoading(false, popupElement)}) // изменено Александром, перед вызовом функции добавлено popup.
 };
@@ -60,7 +60,8 @@ function submitProfileForm(evt) {
       profileName.textContent = data.name
       profileAbout.textContent = data.about
       // closePopup(popupProfile) // старый код закрытия
-      popup.close(popupProfile); // изменено Александром, перед вызовом функции добавлено popup.close.
+      // popup.close(popupProfile); // изменено Александром, перед вызовом функции добавлено popup.close.
+      popupForm.close(popupProfile); // изменено Александром, перед вызовом функции добавлено popupForm.close (закрывает попап и обнуляет инпуты)
       console.log(data); // добавлено Александром
     })
     .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
@@ -75,7 +76,8 @@ function submitAvatarForm(evt) {
     .then((data) => {
       profileAvatar.src = data.avatar
       // closePopup(popupAvatar) // старый код закрытия
-      popup.close(popupAvatar); // изменено Александром, перед вызовом функции добавлено popup.close.
+      // popup.close(popupAvatar); // изменено Александром, перед вызовом функции добавлено popup.close.
+      popupForm.close(popupAvatar); // изменено Александром, перед вызовом функции добавлено popupForm.close (закрывает попап и обнуляет инпуты)
       console.log(data); // добавлено Александром
     })
     .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
@@ -158,7 +160,7 @@ api.getInitialData() // изменено Александром, перед вы
       renderer: (item) => {
         const cardElement = new Card(item,
         {
-          deleteCallback: (evt) => { console.log(evt.target)},
+          deleteCallback: (evt) => { console.log(evt.target) },
           likeCallback: (evt) => { console.log(evt.target) },
           handleCardClick: (cardName, cardLink) => { //изменено Артуром, пока без коллбэков, функции будут обращаться к попапам
 
@@ -179,6 +181,7 @@ api.getInitialData() // изменено Александром, перед вы
 // import {informResIsNotOk, getInitialData, setProfileData, postNewCard, updateAvatar, deleteCard, toggleLike} from './api';
 // import {enableValidation, togglePopupButtonState} from './validate.js';
 // import {openPopup, closePopup, popupIsLoading} from './modal.js'
+// import { renderCard, cardToDelete, removeCard, changeLikeCondition } from './card.js';
 
 
 // function toggleLikeButton(evt) {

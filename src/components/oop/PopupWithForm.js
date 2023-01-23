@@ -8,3 +8,33 @@
 // Перезаписывает родительский метод close, так как при закрытии попапа форма должна ещё и сбрасываться.
 // Для каждого попапа создавайте свой экземпляр класса PopupWithForm.
 
+import { Popup } from "./Popup.js";
+
+export class PopupWithForm extends Popup {
+  constructor(selector) {
+    super(selector);
+
+    // this.formSubmit = formSubmit;
+
+  }
+
+  _getInputValues() {
+    const forms = document.querySelectorAll('.popup__form');
+
+    forms.forEach((form) => {
+      form.reset();
+    });
+  }
+
+  // setEventListeners() {
+  //   super.setEventListeners();
+
+  // }
+
+  close(selector) {
+    super.close(selector);
+    this._getInputValues();
+  }
+}
+
+export const popupForm = new PopupWithForm();

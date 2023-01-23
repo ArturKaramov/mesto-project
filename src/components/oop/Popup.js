@@ -41,12 +41,12 @@ export class Popup {
     }
   }
 
-  // setEventListeners() { // не получается где то использовать
-  //   document.querySelector('.popup__close').addEventListener('click', (evt) => {
-  //     popup.close(evt);
-  //   });
-  //    document.addEventListener('mousedown', this.close)
-  // }
+  setEventListeners() { // не получается где то использовать
+    this.selector.querySelector('.popup__close').addEventListener('click', () => {
+      this.close();
+    });
+     this.selector.addEventListener('mousedown', this.close)
+  }
 }
 
 export const popup = new Popup();
