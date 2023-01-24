@@ -28,6 +28,7 @@ export class Popup {
     if (evt.key === 'Escape') {
       this.openedPopup = document.querySelector('.popup_opened');
       this.close(this.openedPopup);
+      // this.close();
     }
   }
 
@@ -41,12 +42,12 @@ export class Popup {
     }
   }
 
-  setEventListeners() { // не получается где то использовать
-    this.selector.querySelector('.popup__close').addEventListener('click', () => {
-      this.close();
-    });
-     this.selector.addEventListener('mousedown', this.close)
-  }
+  // setEventListeners() { // не знаю как это использовать
+  //   document.querySelector('.popup__close').addEventListener('click', () => {
+  //     this.close();
+  //   });
+  //   selector.addEventListener('mousedown', this.close)
+  // }
 }
 
 export const popup = new Popup();

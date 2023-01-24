@@ -11,24 +11,25 @@
 import { Popup } from "./Popup.js";
 
 export class PopupWithForm extends Popup {
-  constructor(selector) {
+  constructor(selector, formSubmit) {
     super(selector);
 
-    // this.formSubmit = formSubmit;
-
+    this.formSubmit = formSubmit;
+    this.forms = document.querySelectorAll('.popup__form');
   }
 
   _getInputValues() {
-    const forms = document.querySelectorAll('.popup__form');
-
-    forms.forEach((form) => {
+    this.forms.forEach((form) => {
       form.reset();
     });
   }
 
-  // setEventListeners() {
+  // setEventListeners() { // не знаю как это использовать
   //   super.setEventListeners();
 
+  //   this.form.addEventListener('submit', () => {
+  //     this.formSubmit(this._getInputValues());
+  // });
   // }
 
   close(selector) {

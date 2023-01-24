@@ -39,7 +39,10 @@ function addCardHandle(evt) {
         {
           deleteCallback: (evt) => { console.log(evt.target)},
           likeCallback: (evt) => { console.log(evt.target) },
-          handleCardClick: (cardName, cardLink) => { console.log(cardName, cardLink) } //изменено Артуром, пока без коллбэков, функции будут обращаться к попапам
+          handleCardClick: (cardName, cardLink) => { //изменено Артуром, пока без коллбэков, функции будут обращаться к попапам
+            popupImage.open(cardName, cardLink); // добавлено Александром - открытие попапа с картинкой
+            console.log(cardName, cardLink)
+          }
         }, '.element__template', userId);
       cardsSection.addItem(cardElement.getCard())
       // popup.close(popupElement) // изменено Александром, перед вызовом функции добавлено popup.close.
@@ -95,7 +98,7 @@ formAvatar.addEventListener('submit', submitAvatarForm);
 buttonDelete.addEventListener('click', function() {
   api.deleteCard(cardToDelete.dataset.id) // изменено Александром, перед вызовом функции добавлено api.
     .then(() => {
-      removeCard(cardToDelete)
+      removeCard(cardToDelete);
       // closePopup(popupDelete) // старый код закрытия
       popup.close(popupDelete); // изменено Александром, перед вызовом функции добавлено popup.close.
     })
@@ -151,26 +154,35 @@ let cardsSection; //изменено Артуром, секция карточе
 
 api.getInitialData() // изменено Александром, перед вызовом функции добавлено api.
   .then(([data, cards]) => {
+
+    cards.forEach((card) => { // добавлено Александром - смотрим в консоли данные карточек
+      console.log(card);
+    })
+
     userInfo.setUserInfo(data); //изменено Артуром, получение от сервера и добавление на страницу данных name и about
     profileAvatar.src = data.avatar;
     userId = data._id;
-    cards.reverse()
+    cards.reverse();
     cardsSection = new Section({
       items: cards,
       renderer: (item) => {
         const cardElement = new Card(item,
         {
-          deleteCallback: (evt) => { console.log(evt.target) },
+          deleteCallback: (evt) => { console.log(evt.target); },
           likeCallback: (evt) => { console.log(evt.target) },
           handleCardClick: (cardName, cardLink) => { //изменено Артуром, пока без коллбэков, функции будут обращаться к попапам
 
             popupImage.open(cardName, cardLink); // добавлено Александром - открытие попапа с картинкой
 
-            console.log(cardName, cardLink) }
+            console.log(cardName, cardLink);
+          }
         }, '.element__template', userId);
         cardsContainer.prepend(cardElement.getCard());
       }}, '.elements__list');
     cardsSection.renderItems() //изменено Артуром, добавление начальных карточек через классы
+
+
+
   })
   .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
   .finally(() => pageIsLoading(false));
