@@ -3,20 +3,16 @@ export default class Card {
     this._name = name;
     this._link = link;
     this._likes = likes;
-    this._isLiked = likes.some((like) => {return like === userId});
-
-    this.id = owner._id;
+    this._isLiked = likes.some((like) => {return like._id === userId});
+    this._isMine = owner._id === userId;
     this.cardId = _id;
     this._deleteCallback = deleteCallback;
     this._likeCallback = likeCallback;
     this._handleCardClick = handleCardClick;
     this.selector = selector;
-    this.userId = userId;
-
   }
 
   _getElement() {
-    console.log(this._isLiked)
     const cardElement = document
       .querySelector(this.selector)
       .content
@@ -31,11 +27,15 @@ export default class Card {
     this._element.querySelector('.element__photo').src = this._link;
     this._element.querySelector('.element__photo').alt = this._name;
     this._element.querySelector('.element__name').textContent = this._name;
-    this._element.querySelector('.element__likes-number').textContent = this._likes.length;
-    if (this._isLiked) {this._element.querySelector('.element__like').classList.add('element__like_active')};
+    this.setLikeCondition(this._isLiked, this._likes.length)
     this._setEventListeners();
-    if (this.id !== this.userId) {this._element.querySelector('.element__delete').remove()}
+    if (!this._isMine) {this._element.querySelector('.element__delete').remove()}
     return this._element
+  }
+
+  setLikeCondition(isLiked, likesNum) {
+    if (this._isLiked) {this._element.querySelector('.element__like').classList.add('element__like_active')};
+    this._element.querySelector('.element__likes-number').textContent = this._likes.length;
   }
 
   _setEventListeners() {

@@ -1,6 +1,6 @@
 import '../styles/index.css';
 
-import Card, { changeLikeCondition } from './Card.js';
+import Card, { changeLikeCondition } from './card.js';
 
 import FormValidator from './FormValidator';
 
@@ -70,7 +70,7 @@ function submitAvatarForm({link}) {
     .finally(() => { popupAvatar.popupIsLoading(false) });
 };
 
-const testRemoveCard = (card) => {
+const deleteElement = (card) => {
   api.deleteCard(card.dataset.id)
     .then(() => {
       card.remove()
@@ -84,7 +84,7 @@ const userInfo = new UserInfo({nameSelector: '.profile__name', aboutSelector: '.
 const popupProfile = new PopupWithForm('.popup-profile', {submitCallback: submitProfileForm});
 const popupElement = new PopupWithForm('.popup-element', {submitCallback: addCardHandle});
 const popupAvatar = new PopupWithForm('.popup-avatar', {submitCallback: submitAvatarForm});
-const popupDelete = new PopupDelete('.popup-delete', {submitCallback: testRemoveCard});
+const popupDelete = new PopupDelete('.popup-delete', {submitCallback: deleteElement});
 const popupImg = new PopupWithImage('.popup-image');
 
 const formProfileVal = new FormValidator(validationSettings, {form: popupProfile.popup.querySelector('.popup__form')});
