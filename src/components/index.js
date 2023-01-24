@@ -31,6 +31,8 @@ function addCardHandle(cardData) {
   popupElement.popupIsLoading(true);
   api.postNewCard(cardData)
     .then((card) => {
+      console.log(card)
+      console.log(userId)
       const cardElement = new Card(card,
         {
           deleteCallback: (evt) => { popupDelete.open(); popupDelete.setEventListeners(evt) },
