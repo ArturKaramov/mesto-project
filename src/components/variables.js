@@ -22,4 +22,3 @@ export const popupImg = document.querySelector('.popup-image');
 export const popupDelete = document.querySelector('.popup-delete');
 export const popupImgPhoto = popupImg.querySelector('.popup-image__image');
 export const popupCaption = popupImg.querySelector('.popup-image__caption');
-export const buttonDelete = popupDelete.querySelector('.popup__button');

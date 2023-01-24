@@ -10,44 +10,42 @@
 export class Popup {
   constructor(selector) {
     this.selector = selector;
-
-    this._handleEscClose = this._handleEscClose.bind(this);
+    this._popup = document.querySelector(selector);
   }
 
-  open(selector) {
-    selector.classList.add('popup_opened');
-    document.addEventListener('keydown', this._handleEscClose);
+  open() {
+    this._popup.classList.add('popup_opened');
   }
 
-  close(selector) {
-    selector.classList.remove('popup_opened');
-    document.removeEventListener('keydown', this._handleEscClose);
+  close() {
+    this._popup.classList.remove('popup_opened');
   }
 
   _handleEscClose(evt) {
     if (evt.key === 'Escape') {
-      this.openedPopup = document.querySelector('.popup_opened');
-      this.close(this.openedPopup);
-      // this.close();
+      this.close()
+    }
+  };
+
+  _handleOverlayClose(evt) {
+    if (evt.target === evt.currentTarget) {
+      this.close()
     }
   }
 
-  popupIsLoading(isLoading, popup) {
-    const button = popup.querySelector('.popup__button');
-
+  popupIsLoading(isLoading) {
     if (isLoading) {
-      button.textContent = button.getAttribute('data-load')
+      this._popup.querySelector('.popup__button').textContent = this._popup.querySelector('.popup__button').getAttribute('data-load')
     } else {
-      button.textContent = button.getAttribute('data-init')
+      this._popup.querySelector('.popup__button').textContent = this._popup.querySelector('.popup__button').getAttribute('data-init')
     }
   }
 
-  // setEventListeners() { // не знаю как это использовать
-  //   document.querySelector('.popup__close').addEventListener('click', () => {
-  //     this.close();
-  //   });
-  //   selector.addEventListener('mousedown', this.close)
-  // }
+   setEventListeners() {
+     this._popup.querySelector('.popup__close').addEventListener('click', () => this.close());
+     document.addEventListener('keydown', (evt) => this._handleEscClose(evt));
+     this._popup.addEventListener('click', (evt) => this._handleOverlayClose(evt));
+   }
 }
 
-export const popup = new Popup();
+export const popup = new Popup('.popup');

@@ -2,7 +2,7 @@ import '../styles/index.css';
 
 import { pageIsLoading } from "./utils.js";
 
-import {popupCloseList, popupProfile, popupElement, popupAvatar, formAvatar, profileEdit, elementAdd, formProfile, inputName, inputAbout, profileName, profileAbout, avatarButton, profileAvatar, formCard, cardName, cardLink, popupList, buttonDelete, popupDelete, cardsContainer } from "./variables.js"
+import {popupCloseList, popupProfile, popupElement, popupAvatar, formAvatar, profileEdit, elementAdd, formProfile, inputName, inputAbout, profileName, profileAbout, avatarButton, profileAvatar, formCard, cardName, cardLink, popupList, cardsContainer } from "./variables.js"
 
 
 
@@ -10,10 +10,11 @@ import {popupCloseList, popupProfile, popupElement, popupAvatar, formAvatar, pro
 
 import { api } from './oop/Api.js';
 import { validator } from './oop/FormValidator.js';
-import { popup } from './oop/Popup.js';
+import { Popup, popup } from './oop/Popup.js';
 import { popupForm } from './oop/PopupWithForm.js';
 import { popupImage } from './oop/PopupWithImage.js';
-import Card from './oop/Card';
+import { PopupForDelete } from './oop/PopupForDelete';
+import Card, {changeLikeCondition} from './oop/Card';
 import Section from './oop/Section';
 import UserInfo from './oop/UserInfo';
 
@@ -37,8 +38,8 @@ function addCardHandle(evt) {
     .then((card) => { //изменено Артуром, добавление карточки с помощью классов
       const cardElement = new Card(card,
         {
-          deleteCallback: (evt) => { console.log(evt.target)},
-          likeCallback: (evt) => { console.log(evt.target) },
+          deleteCallback: (evt) => { popupDelete.open();  popupDelete.setEventListeners(evt)},
+          likeCallback: (evt) => { toggleLikeButton(evt) },
           handleCardClick: (cardName, cardLink) => { //изменено Артуром, пока без коллбэков, функции будут обращаться к попапам
             popupImage.open(cardName, cardLink); // добавлено Александром - открытие попапа с картинкой
             console.log(cardName, cardLink)
@@ -87,7 +88,18 @@ function submitAvatarForm(evt) {
     .finally(() => {popup.popupIsLoading(false, popupAvatar)}); // изменено Александром, перед вызовом функции добавлено popup.
 };
 
+function deleteElement(card) { //изменено Артуром, добавил для колбэка удаления
+  api.deleteCard(card.dataset.id) // изменено Александром, перед вызовом функции добавлено api.
+    .then(() => {
+      card.remove()
+      popupDelete.close(); // изменено Александром, перед вызовом функции добавлено popup.close.
+    })
+    .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
+};
+
 const userInfo = new UserInfo({nameSelector: '.profile__name', aboutSelector: '.profile__about'}); //изменено Артуром, создание экземпляра класса UserSection
+
+const popupDelete = new PopupForDelete('.popup-delete', {deleteCallback: (card) => deleteElement(card)}); //изменено Артуром, создание попапа удаления
 
 formProfile.addEventListener('submit', submitProfileForm);
 
@@ -95,27 +107,15 @@ formCard.addEventListener('submit', addCardHandle);
 
 formAvatar.addEventListener('submit', submitAvatarForm);
 
-buttonDelete.addEventListener('click', function() {
-  api.deleteCard(cardToDelete.dataset.id) // изменено Александром, перед вызовом функции добавлено api.
-    .then(() => {
-      removeCard(cardToDelete);
-      // closePopup(popupDelete) // старый код закрытия
-      popup.close(popupDelete); // изменено Александром, перед вызовом функции добавлено popup.close.
-    })
-    .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
-});
-
 profileEdit.addEventListener('click', function () {
-  inputName.value = profileName.textContent;
-  inputAbout.value = profileAbout.textContent;
-  // openPopup(popupProfile); // старый код открытия
+  inputName.value = userInfo.getUserInfo().name;
+  inputAbout.value = userInfo.getUserInfo().about;
   popup.open(popupProfile); // изменено Александром, перед вызовом функции добавлено popup.open.
   validator._togglePopupButtonState(popupProfile); // изменено Александром, перед вызовом функции добавлено validator.
 });
 
 elementAdd.addEventListener('click', function () {
   formCard.reset();
-  // openPopup(popupElement); // старый код открытия
   popup.open(popupElement); // изменено Александром, перед вызовом функции добавлено popup.open.
   validator._togglePopupButtonState(popupElement); // изменено Александром, перед вызовом функции добавлено validator.
 });
@@ -125,22 +125,6 @@ avatarButton.addEventListener('click', function() {
   popup.open(popupAvatar); // изменено Александром, перед вызовом функции добавлено popup.open.
   validator._togglePopupButtonState(popupAvatar); // изменено Александром, перед вызовом функции добавлено validator.
 });
-
-popupList.forEach(function(item) {
-  item.addEventListener('mousedown', function(evt) {
-    if (evt.target === evt.currentTarget) {
-      // closePopup(popup); // старый код
-      popup.close(item); // изменено Александром, перед вызовом функции добавлено popup.close.
-    }
-  });
-});
-
-popupCloseList.forEach((closeButton) => {
-  closeButton.addEventListener('click', (evt) => {
-    // closePopup(evt.target.closest('.popup')) // старый код
-    popup.close(evt.target.closest('.popup')) // изменено Александром, перед вызовом функции добавлено popup.close.
-  })
-})
 
 validator.enableValidation({ // изменено Александром, перед вызовом функции добавлено validator.
   formSelector: '.popup__form',
@@ -168,8 +152,8 @@ api.getInitialData() // изменено Александром, перед вы
       renderer: (item) => {
         const cardElement = new Card(item,
         {
-          deleteCallback: (evt) => { console.log(evt.target); },
-          likeCallback: (evt) => { console.log(evt.target) },
+          deleteCallback: (evt) => { popupDelete.open();  popupDelete.setEventListeners(evt)},
+          likeCallback: (evt) => { toggleLikeButton(evt) },
           handleCardClick: (cardName, cardLink) => { //изменено Артуром, пока без коллбэков, функции будут обращаться к попапам
 
             popupImage.open(cardName, cardLink); // добавлено Александром - открытие попапа с картинкой
