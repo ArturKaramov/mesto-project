@@ -10,32 +10,31 @@
 
 import { Popup } from "./Popup.js";
 
-export class PopupWithForm extends Popup {
+export default class PopupWithForm extends Popup {
   constructor(selector, formSubmit) {
     super(selector);
 
     this.formSubmit = formSubmit;
-    this.forms = document.querySelectorAll('.popup__form');
   }
 
   _getInputValues() {
+    this.forms = document.querySelectorAll('.popup__form');
+
     this.forms.forEach((form) => {
       form.reset();
     });
   }
 
-  // setEventListeners() { // не знаю как это использовать
-  //   super.setEventListeners();
+  setEventListeners() {
+    super.setEventListeners();
 
   //   this.form.addEventListener('submit', () => {
-  //     this.formSubmit(this._getInputValues());
+  //     this.formSubmit(this.close());
   // });
-  // }
+  }
 
-  close(selector) {
-    super.close(selector);
+  close() {
+    super.close();
     this._getInputValues();
   }
 }
-
-export const popupForm = new PopupWithForm();

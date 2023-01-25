@@ -9,14 +9,28 @@ import {popupCloseList, popupProfile, popupElement, popupAvatar, formAvatar, pro
 //  M E S T O   -   O O P
 
 import { api } from './oop/Api.js';
-import { validator } from './oop/FormValidator.js';
-import { Popup, popup } from './oop/Popup.js';
-import { popupForm } from './oop/PopupWithForm.js';
-import { popupImage } from './oop/PopupWithImage.js';
+import FormValidator from './oop/FormValidator.js';
+import { popup } from './oop/Popup.js';
+import PopupWithForm from './oop/PopupWithForm';
+import PopupWithImage from './oop/PopupWithImage';
 import { PopupForDelete } from './oop/PopupForDelete';
 import Card, {changeLikeCondition} from './oop/Card';
 import Section from './oop/Section';
 import UserInfo from './oop/UserInfo';
+
+const validator = new FormValidator(); // добавлено Александром, создаем экземпляр класса FormValidator
+
+const popupFormProfile = new PopupWithForm('.popup-profile'); // добавлено Александром, создаем экземпляр попапа "Редактировать профиль" из класса PopupWithForm
+popupFormProfile.setEventListeners(); // добавляем обработчики
+
+const popupFormPlace = new PopupWithForm('.popup-element'); // добавлено Александром, создаем экземпляр попапа "Новое место" из класса PopupWithForm
+popupFormPlace.setEventListeners(); // добавляем обработчики
+
+const popupFormAvatar = new PopupWithForm('.popup-avatar'); // добавлено Александром, создаем экземпляр попапа "Обновить аватар" из класса PopupWithForm
+popupFormAvatar.setEventListeners(); // добавляем обработчики
+
+const popupImage = new PopupWithImage('.popup-image'); // добавлено Александром, создаем экземпляр попапа "Картинка" из класса PopupWithImage
+popupImage.setEventListeners(); // добавляем обработчики
 
 function toggleLikeButton(evt) {
   const card = evt.target.closest('.element');
@@ -47,7 +61,9 @@ function addCardHandle(evt) {
         }, '.element__template', userId);
       cardsSection.addItem(cardElement.getCard())
       // popup.close(popupElement) // изменено Александром, перед вызовом функции добавлено popup.close.
-      popupForm.close(popupElement); // изменено Александром, перед вызовом функции добавлено popupForm.close (закрывает попап и обнуляет инпуты)
+      // popupForm.close(popupElement); // изменено Александром, перед вызовом функции добавлено popupForm.close (закрывает попап и обнуляет инпуты)
+      popupFormPlace.close(popupElement); // изменено Александром, закрывает попап и обнуляет инпуты
+      // popup.setEventListeners();
     })
     .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
     .finally(() => {popup.popupIsLoading(false, popupElement)}) // изменено Александром, перед вызовом функции добавлено popup.
@@ -65,7 +81,9 @@ function submitProfileForm(evt) {
       profileAbout.textContent = data.about
       // closePopup(popupProfile) // старый код закрытия
       // popup.close(popupProfile); // изменено Александром, перед вызовом функции добавлено popup.close.
-      popupForm.close(popupProfile); // изменено Александром, перед вызовом функции добавлено popupForm.close (закрывает попап и обнуляет инпуты)
+      // popupForm.close(popupProfile); // изменено Александром, перед вызовом функции добавлено popupForm.close (закрывает попап и обнуляет инпуты)
+      // popupFormProfile.setEventListeners(popupProfile);
+      popupFormProfile.close(popupProfile); // изменено Александром, закрывает попап и обнуляет инпуты
       console.log(data); // добавлено Александром
     })
     .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
@@ -81,8 +99,10 @@ function submitAvatarForm(evt) {
       profileAvatar.src = data.avatar
       // closePopup(popupAvatar) // старый код закрытия
       // popup.close(popupAvatar); // изменено Александром, перед вызовом функции добавлено popup.close.
-      popupForm.close(popupAvatar); // изменено Александром, перед вызовом функции добавлено popupForm.close (закрывает попап и обнуляет инпуты)
-      console.log(data); // добавлено Александром
+      // popupForm.close(popupAvatar); // изменено Александром, перед вызовом функции добавлено popupForm.close (закрывает попап и обнуляет инпуты)
+
+      popupFormAvatar.close(popupAvatar); // изменено Александром, закрывает попап и обнуляет инпуты
+      // console.log(data); // добавлено Александром
     })
     .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
     .finally(() => {popup.popupIsLoading(false, popupAvatar)}); // изменено Александром, перед вызовом функции добавлено popup.
@@ -92,7 +112,7 @@ function deleteElement(card) { //изменено Артуром, добавил
   api.deleteCard(card.dataset.id) // изменено Александром, перед вызовом функции добавлено api.
     .then(() => {
       card.remove()
-      popupDelete.close(); // изменено Александром, перед вызовом функции добавлено popup.close.
+      popupDelete.close(); // изменено Артуром, перед вызовом функции добавлено popupDelete.close.
     })
     .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
 };
@@ -110,19 +130,34 @@ formAvatar.addEventListener('submit', submitAvatarForm);
 profileEdit.addEventListener('click', function () {
   inputName.value = userInfo.getUserInfo().name;
   inputAbout.value = userInfo.getUserInfo().about;
-  popup.open(popupProfile); // изменено Александром, перед вызовом функции добавлено popup.open.
+  // popup.open(popupProfile); // изменено Александром, перед вызовом функции добавлено popup.open.
+
+
+  popupFormProfile.open(popupProfile); // изменено Александром, используем объект от класса PopupWithForm
+  // console.log(popupProfile);
+
+
   validator._togglePopupButtonState(popupProfile); // изменено Александром, перед вызовом функции добавлено validator.
 });
 
 elementAdd.addEventListener('click', function () {
-  formCard.reset();
-  popup.open(popupElement); // изменено Александром, перед вызовом функции добавлено popup.open.
+  // formCard.reset(); // Александр перенес этот метод в _getInputValues() класса PopupWithForm
+
+  // popup.open(popupElement); // изменено Александром, перед вызовом функции добавлено popup.open.
+
+  popupFormPlace.open(popupElement); // изменено Александром, используем объект от класса PopupWithForm
+  // console.log(popupElement);
+
   validator._togglePopupButtonState(popupElement); // изменено Александром, перед вызовом функции добавлено validator.
 });
 
 avatarButton.addEventListener('click', function() {
   // openPopup(popupAvatar); // старый код открытия
-  popup.open(popupAvatar); // изменено Александром, перед вызовом функции добавлено popup.open.
+  // popup.open(popupAvatar); // изменено Александром, перед вызовом функции добавлено popup.open.
+
+  popupFormAvatar.open(popupAvatar); // изменено Александром, используем объект от класса PopupWithForm
+  // console.log(popupAvatar);
+
   validator._togglePopupButtonState(popupAvatar); // изменено Александром, перед вызовом функции добавлено validator.
 });
 
@@ -158,7 +193,7 @@ api.getInitialData() // изменено Александром, перед вы
 
             popupImage.open(cardName, cardLink); // добавлено Александром - открытие попапа с картинкой
 
-            console.log(cardName, cardLink);
+            // console.log(cardName, cardLink);
           }
         }, '.element__template', userId);
         cardsContainer.prepend(cardElement.getCard());

@@ -23,13 +23,13 @@ export class Popup {
 
   _handleEscClose(evt) {
     if (evt.key === 'Escape') {
-      this.close()
+      this.close();
     }
   };
 
   _handleOverlayClose(evt) {
     if (evt.target === evt.currentTarget) {
-      this.close()
+      this.close();
     }
   }
 
@@ -41,11 +41,11 @@ export class Popup {
     }
   }
 
-   setEventListeners() {
-     this._popup.querySelector('.popup__close').addEventListener('click', () => this.close());
-     document.addEventListener('keydown', (evt) => this._handleEscClose(evt));
-     this._popup.addEventListener('click', (evt) => this._handleOverlayClose(evt));
-   }
+  setEventListeners() {
+    this._popup.querySelector('.popup__close').addEventListener('click', () => this.close());
+    document.addEventListener('keydown', (evt) => this._handleEscClose(evt));
+    this._popup.addEventListener('mousedown', (evt) => this._handleOverlayClose(evt));
+  }
 }
 
 export const popup = new Popup('.popup');

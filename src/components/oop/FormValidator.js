@@ -9,7 +9,7 @@
 // Для каждой проверяемой формы создавайте экземпляр класса FormValidator.
 
 
-class FormValidator {
+export default class FormValidator {
   constructor(selector, formElement) {
     this.selector = selector; // пока не знаю что с ними делать
     this.formElement = formElement; // пока не знаю что с ними делать
@@ -87,4 +87,4 @@ class FormValidator {
   }
 }
 
-export const validator = new FormValidator();
+// export const validator = new FormValidator();
