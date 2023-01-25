@@ -57,9 +57,9 @@ export default class FormValidator {
       buttonElement.removeAttribute("disabled", "")}
   }
 
-  _togglePopupButtonState(popup) {
-    const inputList = Array.from(popup.querySelectorAll('.popup__item'));
-    const buttonElement = popup.querySelector('.popup__button');
+  _togglePopupButtonState() {
+    const inputList = Array.from(this.formElement.querySelectorAll('.popup__item'));
+    const buttonElement = this.formElement.querySelector('.popup__button');
     this._toggleButtonState(inputList, buttonElement);
   }
 

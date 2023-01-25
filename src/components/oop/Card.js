@@ -16,21 +16,21 @@
 
 export default class Card {
   constructor({name, link, likes, owner, _id}, {deleteCallback, likeCallback, handleCardClick}, selector, userId) {
-    this.name = name;
-    this.link = link;
-    this.likes = likes;
-    this.id = owner._id;
-    this.cardId = _id;
+    this._name = name;
+    this._link = link;
+    this._likes = likes;
+    this._isLiked = likes.some((like) => {return like._id === userId});
+    this._isMine = owner._id === userId;
+    this._cardId = _id;
     this._deleteCallback = deleteCallback;
     this._likeCallback = likeCallback;
     this._handleCardClick = handleCardClick;
-    this.selector = selector;
-    this.userId = userId;
+    this._selector = selector;
   }
 
   _getElement() {
     const cardElement = document
-      .querySelector(this.selector)
+      .querySelector(this._selector)
       .content
       .querySelector('.element')
       .cloneNode(true)
@@ -39,23 +39,25 @@ export default class Card {
 
   _createCard() {
     this._element = this._getElement();
-    this._element.dataset.id = this.cardId;
-    this._element.querySelector('.element__photo').src = this.link;
-    this._element.querySelector('.element__photo').alt = this.name;
-    this._element.querySelector('.element__name').textContent = this.name;
-    this._element.querySelector('.element__likes-number').textContent = this.likes.length;
-    if (this.likes.some((like) => {return like._id === this.userId})) {
-      this._element.querySelector('.element__like').classList.add('element__like_active')
-    };
+    this._element.dataset.id = this._cardId;
+    this._element.querySelector('.element__photo').src = this._link;
+    this._element.querySelector('.element__photo').alt = this._name;
+    this._element.querySelector('.element__name').textContent = this._name;
+    this._setLikeCondition(this._isLiked, this._likes.length)
     this._setEventListeners();
-    if (this.id !== this.userId) {this._element.querySelector('.element__delete').remove()}
+    if (!this._isMine) {this._element.querySelector('.element__delete').remove()}
     return this._element
+  }
+
+  _setLikeCondition() {
+    if (this._isLiked) {this._element.querySelector('.element__like').classList.add('element__like_active')};
+    this._element.querySelector('.element__likes-number').textContent = this._likes.length;
   }
 
   _setEventListeners() {
     this._element.querySelector('.element__delete').addEventListener('click', (evt) => {this._deleteCallback(evt)});
     this._element.querySelector('.element__like').addEventListener('click', (evt) => {this._likeCallback(evt)});
-    this._element.querySelector('.element__photo').addEventListener('click', () => {this._handleCardClick(this.name, this.link)});
+    this._element.querySelector('.element__photo').addEventListener('click', () => {this._handleCardClick(this._name, this._link)});
   }
 
   getCard() {

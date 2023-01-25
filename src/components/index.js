@@ -20,17 +20,17 @@ import UserInfo from './oop/UserInfo';
 
 const validator = new FormValidator(); // добавлено Александром, создаем экземпляр класса FormValidator
 
-const popupFormProfile = new PopupWithForm('.popup-profile'); // добавлено Александром, создаем экземпляр попапа "Редактировать профиль" из класса PopupWithForm
-popupFormProfile.setEventListeners(); // добавляем обработчики
+const popupFormProfile = new PopupWithForm('.popup-profile', {formSubmit: submitProfileForm}); // добавлено Александром, создаем экземпляр попапа "Редактировать профиль" из класса PopupWithForm
 
-const popupFormPlace = new PopupWithForm('.popup-element'); // добавлено Александром, создаем экземпляр попапа "Новое место" из класса PopupWithForm
-popupFormPlace.setEventListeners(); // добавляем обработчики
+const popupFormPlace = new PopupWithForm('.popup-element', {formSubmit: addCardHandle}); // добавлено Александром, создаем экземпляр попапа "Новое место" из класса PopupWithForm
 
-const popupFormAvatar = new PopupWithForm('.popup-avatar'); // добавлено Александром, создаем экземпляр попапа "Обновить аватар" из класса PopupWithForm
-popupFormAvatar.setEventListeners(); // добавляем обработчики
+const popupFormAvatar = new PopupWithForm('.popup-avatar', {formSubmit: submitAvatarForm}); // добавлено Александром, создаем экземпляр попапа "Обновить аватар" из класса PopupWithForm
 
 const popupImage = new PopupWithImage('.popup-image'); // добавлено Александром, создаем экземпляр попапа "Картинка" из класса PopupWithImage
-popupImage.setEventListeners(); // добавляем обработчики
+
+const popupDelete = new PopupForDelete('.popup-delete', {deleteCallback: deleteElement}); //изменено Артуром, создание попапа удаления
+
+const userInfo = new UserInfo({nameSelector: '.profile__name', aboutSelector: '.profile__about'}); //изменено Артуром, создание экземпляра класса UserSection
 
 function toggleLikeButton(evt) {
   const card = evt.target.closest('.element');
@@ -42,70 +42,47 @@ function toggleLikeButton(evt) {
     .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
 };
 
-function addCardHandle(evt) {
-  evt.preventDefault();
-  popup.popupIsLoading(true, popupElement); // изменено Александром, перед вызовом функции добавлено popup.
-  const cardData = {};
-  cardData.name = cardName.value;
-  cardData.link = cardLink.value;
+function addCardHandle(cardData) {
+  popupFormPlace.popupIsLoading(true); // изменено Александром, перед вызовом функции добавлено popup.
   api.postNewCard(cardData) // изменено Александром, перед вызовом функции добавлено api.
     .then((card) => { //изменено Артуром, добавление карточки с помощью классов
       const cardElement = new Card(card,
         {
           deleteCallback: (evt) => { popupDelete.open();  popupDelete.setEventListeners(evt)},
           likeCallback: (evt) => { toggleLikeButton(evt) },
-          handleCardClick: (cardName, cardLink) => { //изменено Артуром, пока без коллбэков, функции будут обращаться к попапам
-            popupImage.open(cardName, cardLink); // добавлено Александром - открытие попапа с картинкой
+          handleCardClick: (cardName, cardLink) => {
             console.log(cardName, cardLink)
+            popupImage.open(cardName, cardLink); // добавлено Александром - открытие попапа с картинкой
+            popupImage.setEventListeners();
           }
         }, '.element__template', userId);
       cardsSection.addItem(cardElement.getCard())
-      // popup.close(popupElement) // изменено Александром, перед вызовом функции добавлено popup.close.
-      // popupForm.close(popupElement); // изменено Александром, перед вызовом функции добавлено popupForm.close (закрывает попап и обнуляет инпуты)
-      popupFormPlace.close(popupElement); // изменено Александром, закрывает попап и обнуляет инпуты
-      // popup.setEventListeners();
+      popupFormPlace.close(); // изменено Александром, закрывает попап и обнуляет инпуты
     })
     .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
-    .finally(() => {popup.popupIsLoading(false, popupElement)}) // изменено Александром, перед вызовом функции добавлено popup.
+    .finally(() => {popupFormPlace.popupIsLoading(false)}) // изменено Александром, перед вызовом функции добавлено popup.
 };
 
-function submitProfileForm(evt) {
-  evt.preventDefault();
-  popup.popupIsLoading(true, popupProfile); // изменено Александром, перед вызовом функции добавлено popup.
-  const user = {}
-  user.name = inputName.value;
-  user.about = inputAbout.value;
-  api.setProfileData(user) // изменено Александром, перед вызовом функции добавлено api.
+function submitProfileForm(profile) {
+  popupFormProfile.popupIsLoading(true); // изменено Александром, перед вызовом функции добавлено popup.
+  api.setProfileData(profile) // изменено Александром, перед вызовом функции добавлено api.
     .then((data) => {
-      profileName.textContent = data.name
-      profileAbout.textContent = data.about
-      // closePopup(popupProfile) // старый код закрытия
-      // popup.close(popupProfile); // изменено Александром, перед вызовом функции добавлено popup.close.
-      // popupForm.close(popupProfile); // изменено Александром, перед вызовом функции добавлено popupForm.close (закрывает попап и обнуляет инпуты)
-      // popupFormProfile.setEventListeners(popupProfile);
-      popupFormProfile.close(popupProfile); // изменено Александром, закрывает попап и обнуляет инпуты
-      console.log(data); // добавлено Александром
+      userInfo.setUserInfo(data);
+      popupFormProfile.close(); // изменено Александром, закрывает попап и обнуляет инпуты
     })
     .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
-    .finally(() => {popup.popupIsLoading(false, popupProfile)}); // изменено Александром, перед вызовом функции добавлено popup.
+    .finally(() => {popupFormProfile.popupIsLoading(false)}); // изменено Александром, перед вызовом функции добавлено popup.
 };
 
-function submitAvatarForm(evt) {
-  evt.preventDefault();
-  popup.popupIsLoading(true, popupAvatar); // изменено Александром, перед вызовом функции добавлено popup.
-  const newAvatar = popupAvatar.querySelector('.popup__item').value;
-  api.updateAvatar(newAvatar) // изменено Александром, перед вызовом функции добавлено api.
+function submitAvatarForm({link}) {
+  popupFormAvatar.popupIsLoading(true); // изменено Александром, перед вызовом функции добавлено popup.
+  api.updateAvatar(link) // изменено Александром, перед вызовом функции добавлено api.
     .then((data) => {
-      profileAvatar.src = data.avatar
-      // closePopup(popupAvatar) // старый код закрытия
-      // popup.close(popupAvatar); // изменено Александром, перед вызовом функции добавлено popup.close.
-      // popupForm.close(popupAvatar); // изменено Александром, перед вызовом функции добавлено popupForm.close (закрывает попап и обнуляет инпуты)
-
-      popupFormAvatar.close(popupAvatar); // изменено Александром, закрывает попап и обнуляет инпуты
-      // console.log(data); // добавлено Александром
+      profileAvatar.src = data.avatar;
+      popupFormAvatar.close(); // изменено Александром, закрывает попап и обнуляет инпуты
     })
     .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
-    .finally(() => {popup.popupIsLoading(false, popupAvatar)}); // изменено Александром, перед вызовом функции добавлено popup.
+    .finally(() => {popupFormAvatar.popupIsLoading(false)}); // изменено Александром, перед вызовом функции добавлено popup.
 };
 
 function deleteElement(card) { //изменено Артуром, добавил для колбэка удаления
@@ -117,48 +94,24 @@ function deleteElement(card) { //изменено Артуром, добавил
     .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
 };
 
-const userInfo = new UserInfo({nameSelector: '.profile__name', aboutSelector: '.profile__about'}); //изменено Артуром, создание экземпляра класса UserSection
-
-const popupDelete = new PopupForDelete('.popup-delete', {deleteCallback: (card) => deleteElement(card)}); //изменено Артуром, создание попапа удаления
-
-formProfile.addEventListener('submit', submitProfileForm);
-
-formCard.addEventListener('submit', addCardHandle);
-
-formAvatar.addEventListener('submit', submitAvatarForm);
-
 profileEdit.addEventListener('click', function () {
   inputName.value = userInfo.getUserInfo().name;
   inputAbout.value = userInfo.getUserInfo().about;
-  // popup.open(popupProfile); // изменено Александром, перед вызовом функции добавлено popup.open.
-
-
-  popupFormProfile.open(popupProfile); // изменено Александром, используем объект от класса PopupWithForm
-  // console.log(popupProfile);
-
-
-  validator._togglePopupButtonState(popupProfile); // изменено Александром, перед вызовом функции добавлено validator.
+  popupFormProfile.open(); // изменено Александром, используем объект от класса PopupWithForm
+  popupFormProfile.setEventListeners();
+  validator._togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено validator.
 });
 
 elementAdd.addEventListener('click', function () {
-  // formCard.reset(); // Александр перенес этот метод в _getInputValues() класса PopupWithForm
-
-  // popup.open(popupElement); // изменено Александром, перед вызовом функции добавлено popup.open.
-
-  popupFormPlace.open(popupElement); // изменено Александром, используем объект от класса PopupWithForm
-  // console.log(popupElement);
-
-  validator._togglePopupButtonState(popupElement); // изменено Александром, перед вызовом функции добавлено validator.
+  popupFormPlace.open(); // изменено Александром, используем объект от класса PopupWithForm
+  popupFormPlace.setEventListeners();
+  validator._togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено validator.
 });
 
 avatarButton.addEventListener('click', function() {
-  // openPopup(popupAvatar); // старый код открытия
-  // popup.open(popupAvatar); // изменено Александром, перед вызовом функции добавлено popup.open.
-
-  popupFormAvatar.open(popupAvatar); // изменено Александром, используем объект от класса PopupWithForm
-  // console.log(popupAvatar);
-
-  validator._togglePopupButtonState(popupAvatar); // изменено Александром, перед вызовом функции добавлено validator.
+  popupFormAvatar.open(); // изменено Александром, используем объект от класса PopupWithForm
+  popupFormAvatar.setEventListeners();
+  validator._togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено validator.
 });
 
 validator.enableValidation({ // изменено Александром, перед вызовом функции добавлено validator.
@@ -189,19 +142,14 @@ api.getInitialData() // изменено Александром, перед вы
         {
           deleteCallback: (evt) => { popupDelete.open();  popupDelete.setEventListeners(evt)},
           likeCallback: (evt) => { toggleLikeButton(evt) },
-          handleCardClick: (cardName, cardLink) => { //изменено Артуром, пока без коллбэков, функции будут обращаться к попапам
-
+          handleCardClick: (cardName, cardLink) => {
             popupImage.open(cardName, cardLink); // добавлено Александром - открытие попапа с картинкой
-
-            // console.log(cardName, cardLink);
+            popupImage.setEventListeners();
           }
         }, '.element__template', userId);
         cardsContainer.prepend(cardElement.getCard());
       }}, '.elements__list');
     cardsSection.renderItems() //изменено Артуром, добавление начальных карточек через классы
-
-
-
   })
   .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
   .finally(() => pageIsLoading(false));
