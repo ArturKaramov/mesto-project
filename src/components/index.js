@@ -18,7 +18,10 @@ import Card, {changeLikeCondition} from './oop/Card';
 import Section from './oop/Section';
 import UserInfo from './oop/UserInfo';
 
-const validator = new FormValidator(); // добавлено Александром, создаем экземпляр класса FormValidator
+// const validator = new FormValidator(); // добавлено Александром, создаем экземпляр класса FormValidator
+
+const formValidation = new FormValidator('.popup__form');
+formValidation.enableValidation();
 
 const popupFormProfile = new PopupWithForm('.popup-profile', {formSubmit: submitProfileForm}); // добавлено Александром, создаем экземпляр попапа "Редактировать профиль" из класса PopupWithForm
 
@@ -99,22 +102,45 @@ profileEdit.addEventListener('click', function () {
   inputAbout.value = userInfo.getUserInfo().about;
   popupFormProfile.open(); // изменено Александром, используем объект от класса PopupWithForm
   popupFormProfile.setEventListeners();
-  validator._togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено validator.
+
+
+  formValidation._toggleButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
+
+
 });
 
 elementAdd.addEventListener('click', function () {
   popupFormPlace.open(); // изменено Александром, используем объект от класса PopupWithForm
   popupFormPlace.setEventListeners();
-  validator._togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено validator.
+
+
+  formValidation._toggleButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
+
+
 });
 
 avatarButton.addEventListener('click', function() {
   popupFormAvatar.open(); // изменено Александром, используем объект от класса PopupWithForm
   popupFormAvatar.setEventListeners();
-  validator._togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено validator.
+
+
+  formValidation._toggleButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
+
+
 });
 
-validator.enableValidation({ // изменено Александром, перед вызовом функции добавлено validator.
+// const validationSelectors = {
+//   formSelector: '.popup__form',
+//   inputSelector: '.popup__item',
+//   submitButtonSelector: '.popup__button',
+//   inputErrorClass: 'popup__item_type_error'
+
+//   // этих селекторов нет у Артура
+//   // inactiveButtonClass: 'form__button_disabled',
+//   // errorClass: 'form__input-error_active',
+// };
+
+formValidation.enableValidation({ // изменено Александром, перед вызовом функции добавлено formValidation.
   formSelector: '.popup__form',
   inputSelector: '.popup__item',
   submitButtonSelector: '.popup__button',
