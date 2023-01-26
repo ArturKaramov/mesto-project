@@ -2,7 +2,7 @@ import '../styles/index.css';
 
 import { pageIsLoading } from "./utils.js";
 
-import {popupCloseList, popupProfile, popupElement, popupAvatar, formAvatar, profileEdit, elementAdd, formProfile, inputName, inputAbout, profileName, profileAbout, avatarButton, profileAvatar, formCard, cardName, cardLink, popupList, cardsContainer } from "./variables.js"
+import {popupCloseList, popupProfile, popupElement, popupAvatar, formAvatar, profileEdit, elementAdd, formProfile, inputName, inputAbout, profileName, profileAbout, avatarButton, profileAvatar, formCard, cardName, cardLink, popupList, cardsContainer, validationSettings } from "./variables.js"
 
 
 
@@ -20,8 +20,15 @@ import UserInfo from './oop/UserInfo';
 
 // const validator = new FormValidator(); // добавлено Александром, создаем экземпляр класса FormValidator
 
-const formValidation = new FormValidator('.popup__form');
-// formValidation.enableValidation();
+const profileFormValidation = new FormValidator(validationSettings, {formElement: document.querySelector(".popup__form[name=profile-data]")});
+profileFormValidation.enableValidation();
+
+const cardFormValidation = new FormValidator(validationSettings, {formElement: document.querySelector(".popup__form[name=element-data]")});
+cardFormValidation.enableValidation();
+
+const avatarFormValidation = new FormValidator(validationSettings, {formElement: document.querySelector(".popup__form[name=avatar-link]")});
+avatarFormValidation.enableValidation();
+
 
 const popupFormProfile = new PopupWithForm('.popup-profile', {formSubmit: submitProfileForm}); // добавлено Александром, создаем экземпляр попапа "Редактировать профиль" из класса PopupWithForm
 
@@ -34,6 +41,9 @@ const popupImage = new PopupWithImage('.popup-image'); // добавлено А�
 const popupDelete = new PopupForDelete('.popup-delete', {deleteCallback: deleteElement}); //изменено Артуром, создание попапа удаления
 
 const userInfo = new UserInfo({nameSelector: '.profile__name', aboutSelector: '.profile__about'}); //изменено Артуром, создание экземпляра класса UserSection
+
+
+
 
 function toggleLikeButton(evt) {
   const card = evt.target.closest('.element');
@@ -104,7 +114,7 @@ profileEdit.addEventListener('click', function () {
   popupFormProfile.setEventListeners();
 
 
-  formValidation._togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
+  profileFormValidation._togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
 
 
 });
@@ -114,7 +124,7 @@ elementAdd.addEventListener('click', function () {
   popupFormPlace.setEventListeners();
 
 
-  formValidation._togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
+  cardFormValidation._togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
 
 
 });
@@ -122,11 +132,7 @@ elementAdd.addEventListener('click', function () {
 avatarButton.addEventListener('click', function() {
   popupFormAvatar.open(); // изменено Александром, используем объект от класса PopupWithForm
   popupFormAvatar.setEventListeners();
-
-
-  formValidation._togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
-
-
+  avatarFormValidation._togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
 });
 
 // const validationSelectors = {
@@ -139,13 +145,6 @@ avatarButton.addEventListener('click', function() {
 //   // inactiveButtonClass: 'form__button_disabled',
 //   // errorClass: 'form__input-error_active',
 // };
-
-formValidation.enableValidation({ // изменено Александром, перед вызовом функции добавлено formValidation.
-  formSelector: '.popup__form',
-  inputSelector: '.popup__item',
-  submitButtonSelector: '.popup__button',
-  inputErrorClass: 'popup__item_type_error'
-});
 
 let userId;
 let cardsSection; //изменено Артуром, секция карточек, инициализировано в глобальной области
