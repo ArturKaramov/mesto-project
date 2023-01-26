@@ -21,7 +21,7 @@ import UserInfo from './oop/UserInfo';
 // const validator = new FormValidator(); // добавлено Александром, создаем экземпляр класса FormValidator
 
 const formValidation = new FormValidator('.popup__form');
-// formValidation.enableValidation();
+formValidation.enableValidation();
 
 const popupFormProfile = new PopupWithForm('.popup-profile', {formSubmit: submitProfileForm}); // добавлено Александром, создаем экземпляр попапа "Редактировать профиль" из класса PopupWithForm
 
@@ -104,7 +104,7 @@ profileEdit.addEventListener('click', function () {
   popupFormProfile.setEventListeners();
 
 
-  formValidation._togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
+  formValidation.togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
 
 
 });
@@ -114,7 +114,7 @@ elementAdd.addEventListener('click', function () {
   popupFormPlace.setEventListeners();
 
 
-  formValidation._togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
+  formValidation.togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
 
 
 });
@@ -123,8 +123,9 @@ avatarButton.addEventListener('click', function() {
   popupFormAvatar.open(); // изменено Александром, используем объект от класса PopupWithForm
   popupFormAvatar.setEventListeners();
 
-
-  formValidation._togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
+  const editPopup = document.querySelector('.popup-avatar');
+  const editForm = editPopup.querySelector('.popup__form');
+  formValidation.togglePopupButtonState(editForm); // изменено Александром, перед вызовом функции добавлено formValidation.
 
 
 });
