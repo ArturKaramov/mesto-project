@@ -21,7 +21,7 @@ import UserInfo from './oop/UserInfo';
 // const validator = new FormValidator(); // добавлено Александром, создаем экземпляр класса FormValidator
 
 const formValidation = new FormValidator('.popup__form');
-formValidation.enableValidation();
+// formValidation.enableValidation();
 
 const popupFormProfile = new PopupWithForm('.popup-profile', {formSubmit: submitProfileForm}); // добавлено Александром, создаем экземпляр попапа "Редактировать профиль" из класса PopupWithForm
 
@@ -104,7 +104,7 @@ profileEdit.addEventListener('click', function () {
   popupFormProfile.setEventListeners();
 
 
-  formValidation._toggleButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
+  formValidation._togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
 
 
 });
@@ -114,7 +114,7 @@ elementAdd.addEventListener('click', function () {
   popupFormPlace.setEventListeners();
 
 
-  formValidation._toggleButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
+  formValidation._togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
 
 
 });
@@ -124,7 +124,7 @@ avatarButton.addEventListener('click', function() {
   popupFormAvatar.setEventListeners();
 
 
-  formValidation._toggleButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
+  formValidation._togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
 
 
 });
