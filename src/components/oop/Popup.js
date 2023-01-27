@@ -8,10 +8,8 @@
 // Модальное окно также закрывается при клике на затемнённую область вокруг формы.
 
 export default class Popup {
-  constructor(selector) {
-    this.selector = selector;
-    this._popup = document.querySelector(selector);
-
+  constructor(popupSelector) {
+    this._popup = document.querySelector(popupSelector);
     this._handleEscClose = this._handleEscClose.bind(this);
   }
 
@@ -47,7 +45,6 @@ export default class Popup {
 
   setEventListeners() {
     this._popup.querySelector('.popup__close').addEventListener('click', () => this.close());
-    // document.addEventListener('keydown', (evt) => this._handleEscClose(evt));
     this._popup.addEventListener('mousedown', (evt) => this._handleOverlayClose(evt));
   }
 }
