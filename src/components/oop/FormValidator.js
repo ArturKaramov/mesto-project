@@ -11,7 +11,7 @@
 
 
 export default class FormValidator {
-  constructor({ formSelector, inputSelector, submitButtonSelector, inputErrorClass }, {formElement}) {
+  constructor({ formSelector, inputSelector, submitButtonSelector, inputErrorClass }, {formElement}, inputList, buttonElement) {
 
     this.formSelector = formSelector;
     this.inputSelector = inputSelector;
@@ -19,6 +19,9 @@ export default class FormValidator {
     this.inputErrorClass = inputErrorClass;
 
     this.formElement = formElement;
+
+    this._inputList = inputList;
+    this._buttonElement = buttonElement;
   }
 
   _showInputError(inputElement, errorMessage) {
@@ -62,19 +65,19 @@ export default class FormValidator {
   }
 
   _togglePopupButtonState() {
-    const inputList = Array.from(this.formElement.querySelectorAll('.popup__item'));
-    const buttonElement = this.formElement.querySelector('.popup__button');
-    this._toggleButtonState(inputList, buttonElement);
+    this._inputList = Array.from(this.formElement.querySelectorAll('.popup__item'));
+    this._buttonElement = this.formElement.querySelector('.popup__button');
+    this._toggleButtonState(this._inputList, this._buttonElement);
   }
 
   _setEventListeners() {
-    const inputList = Array.from(this.formElement.querySelectorAll(this.inputSelector));
-    const buttonElement = this.formElement.querySelector(this.submitButtonSelector);
+    this._inputList = Array.from(this.formElement.querySelectorAll(this.inputSelector));
+    this._buttonElement = this.formElement.querySelector(this.submitButtonSelector);
 
-    inputList.forEach((inputElement) => {
+    this._inputList.forEach((inputElement) => {
       inputElement.addEventListener('input', () => {
         this._checkInputValidity(inputElement);
-        this._toggleButtonState(inputList, buttonElement);
+        this._toggleButtonState(this._inputList, this._buttonElement);
       });
     });
   }
