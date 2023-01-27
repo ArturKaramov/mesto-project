@@ -1,6 +1,6 @@
-import { Popup } from "./Popup";
+import Popup from "./Popup";
 
-export class PopupForDelete extends Popup {
+export default class PopupForDelete extends Popup {
   constructor(selector, {deleteCallback}) {
     super(selector);
     this._deleteCallback = deleteCallback;

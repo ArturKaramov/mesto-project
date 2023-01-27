@@ -26,7 +26,6 @@ export default class FormValidator {
 
     inputElement.classList.add(this.inputErrorClass);
     errorElement.textContent = errorMessage;
-    // errorElement.classList.remove(obj.errorClass); // добавлено Александром
   }
 
   _hideInputError(inputElement) {
@@ -34,7 +33,6 @@ export default class FormValidator {
 
     inputElement.classList.remove(this.inputErrorClass);
     errorElement.textContent = '';
-    // errorElement.classList.remove(this.errorClass); // добавлено Александром
   }
 
   _checkInputValidity(inputElement) {

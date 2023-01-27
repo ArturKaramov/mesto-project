@@ -2,30 +2,35 @@ import '../styles/index.css';
 
 import { pageIsLoading } from "./utils.js";
 
-import {popupCloseList, popupProfile, popupElement, popupAvatar, formAvatar, profileEdit, elementAdd, formProfile, inputName, inputAbout, profileName, profileAbout, avatarButton, profileAvatar, formCard, cardName, cardLink, popupList, cardsContainer } from "./variables.js"
+import {popupCloseList, popupProfile, popupElement, popupAvatar, formAvatar, profileEdit, elementAdd, formProfile, inputName, inputAbout, profileName, profileAbout, avatarButton, profileAvatar, formCard, cardName, cardLink, popupList, cardsContainer, validationSettings } from "./variables.js"
 
 
 
 //  M E S T O   -   O O P
 
-import { api } from './oop/Api.js';
-import FormValidator from './oop/FormValidator.js';
-import { popup } from './oop/Popup.js';
+import { api } from './oop/Api';
+import FormValidator from './oop/FormValidator';
 import PopupWithForm from './oop/PopupWithForm';
 import PopupWithImage from './oop/PopupWithImage';
-import { PopupForDelete } from './oop/PopupForDelete';
+import PopupForDelete from './oop/PopupForDelete';
 import Card, {changeLikeCondition} from './oop/Card';
 import Section from './oop/Section';
 import UserInfo from './oop/UserInfo';
 
-// const validator = new FormValidator(); // добавлено Александром, создаем экземпляр класса FormValidator
+const profileFormValidation = new FormValidator(validationSettings, {formElement: document.querySelector(".popup__form[name=profile-data]")});
+profileFormValidation.enableValidation();
 
-const formValidation = new FormValidator('.popup__form');
-formValidation.enableValidation();
+const cardFormValidation = new FormValidator(validationSettings, {formElement: document.querySelector(".popup__form[name=element-data]")});
+cardFormValidation.enableValidation();
+
+const avatarFormValidation = new FormValidator(validationSettings, {formElement: document.querySelector(".popup__form[name=avatar-link]")});
+avatarFormValidation.enableValidation();
+
 
 const popupFormProfile = new PopupWithForm('.popup-profile', {formSubmit: submitProfileForm}); // добавлено Александром, создаем экземпляр попапа "Редактировать профиль" из класса PopupWithForm
 
 const popupFormPlace = new PopupWithForm('.popup-element', {formSubmit: addCardHandle}); // добавлено Александром, создаем экземпляр попапа "Новое место" из класса PopupWithForm
+popupFormPlace.setEventListeners();
 
 const popupFormAvatar = new PopupWithForm('.popup-avatar', {formSubmit: submitAvatarForm}); // добавлено Александром, создаем экземпляр попапа "Обновить аватар" из класса PopupWithForm
 
@@ -34,6 +39,9 @@ const popupImage = new PopupWithImage('.popup-image'); // добавлено А�
 const popupDelete = new PopupForDelete('.popup-delete', {deleteCallback: deleteElement}); //изменено Артуром, создание попапа удаления
 
 const userInfo = new UserInfo({nameSelector: '.profile__name', aboutSelector: '.profile__about'}); //изменено Артуром, создание экземпляра класса UserSection
+
+
+
 
 function toggleLikeButton(evt) {
   const card = evt.target.closest('.element');
@@ -102,50 +110,18 @@ profileEdit.addEventListener('click', function () {
   inputAbout.value = userInfo.getUserInfo().about;
   popupFormProfile.open(); // изменено Александром, используем объект от класса PopupWithForm
   popupFormProfile.setEventListeners();
-
-
-  formValidation.togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
-
-
+  profileFormValidation._togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
 });
 
 elementAdd.addEventListener('click', function () {
   popupFormPlace.open(); // изменено Александром, используем объект от класса PopupWithForm
-  popupFormPlace.setEventListeners();
-
-
-  formValidation.togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
-
-
+  cardFormValidation._togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
 });
 
 avatarButton.addEventListener('click', function() {
   popupFormAvatar.open(); // изменено Александром, используем объект от класса PopupWithForm
   popupFormAvatar.setEventListeners();
-
-  const editPopup = document.querySelector('.popup-avatar');
-  const editForm = editPopup.querySelector('.popup__form');
-  formValidation.togglePopupButtonState(editForm); // изменено Александром, перед вызовом функции добавлено formValidation.
-
-
-});
-
-// const validationSelectors = {
-//   formSelector: '.popup__form',
-//   inputSelector: '.popup__item',
-//   submitButtonSelector: '.popup__button',
-//   inputErrorClass: 'popup__item_type_error'
-
-//   // этих селекторов нет у Артура
-//   // inactiveButtonClass: 'form__button_disabled',
-//   // errorClass: 'form__input-error_active',
-// };
-
-formValidation.enableValidation({ // изменено Александром, перед вызовом функции добавлено formValidation.
-  formSelector: '.popup__form',
-  inputSelector: '.popup__item',
-  submitButtonSelector: '.popup__button',
-  inputErrorClass: 'popup__item_type_error'
+  avatarFormValidation._togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
 });
 
 let userId;
@@ -180,6 +156,8 @@ api.getInitialData() // изменено Александром, перед вы
   })
   .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
   .finally(() => pageIsLoading(false));
+
+
 
 
 //  M E S T O   -   A P I
@@ -309,4 +287,3 @@ api.getInitialData() // изменено Александром, перед вы
 //   })
 //   .catch((err) => {informResIsNotOk(err)})
 //   .finally(() => pageIsLoading(false));
-
