@@ -54,7 +54,7 @@ function toggleLikeButton(evt) {
 };
 
 function addCardHandle(cardData) {
-  popupFormPlace.popupIsLoading(true); // изменено Александром, перед вызовом функции добавлено popup.
+  popupFormPlace.renderLoading(true); // изменено Александром, после ревью 1
   api.postNewCard(cardData) // изменено Александром, перед вызовом функции добавлено api.
     .then((card) => { //изменено Артуром, добавление карточки с помощью классов
       const cardElement = new Card(card,
@@ -71,29 +71,29 @@ function addCardHandle(cardData) {
       popupFormPlace.close(); // изменено Александром, закрывает попап и обнуляет инпуты
     })
     .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
-    .finally(() => {popupFormPlace.popupIsLoading(false)}) // изменено Александром, перед вызовом функции добавлено popup.
+    .finally(() => {popupFormPlace.renderLoading(false)}) // изменено Александром, после ревью 1
 };
 
 function submitProfileForm(profile) {
-  popupFormProfile.popupIsLoading(true); // изменено Александром, перед вызовом функции добавлено popup.
+  popupFormProfile.renderLoading(true); // изменено Александром, после ревью 1
   api.setProfileData(profile) // изменено Александром, перед вызовом функции добавлено api.
     .then((data) => {
       userInfo.setUserInfo(data);
       popupFormProfile.close(); // изменено Александром, закрывает попап и обнуляет инпуты
     })
     .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
-    .finally(() => {popupFormProfile.popupIsLoading(false)}); // изменено Александром, перед вызовом функции добавлено popup.
+    .finally(() => {popupFormProfile.renderLoading(false)}); // изменено Александром, после ревью 1
 };
 
 function submitAvatarForm({link}) {
-  popupFormAvatar.popupIsLoading(true); // изменено Александром, перед вызовом функции добавлено popup.
+  popupFormAvatar.renderLoading(true); // изменено Александром, после ревью 1
   api.updateAvatar(link) // изменено Александром, перед вызовом функции добавлено api.
     .then((data) => {
       profileAvatar.src = data.avatar;
       popupFormAvatar.close(); // изменено Александром, закрывает попап и обнуляет инпуты
     })
     .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
-    .finally(() => {popupFormAvatar.popupIsLoading(false)}); // изменено Александром, перед вызовом функции добавлено popup.
+    .finally(() => {popupFormAvatar.renderLoading(false)}); // изменено Александром, после ревью 1
 };
 
 function deleteElement(card) { //изменено Артуром, добавил для колбэка удаления

@@ -35,14 +35,6 @@ export default class Popup {
     }
   }
 
-  popupIsLoading(isLoading) {
-    if (isLoading) {
-      this._popup.querySelector('.popup__button').textContent = this._popup.querySelector('.popup__button').getAttribute('data-load')
-    } else {
-      this._popup.querySelector('.popup__button').textContent = this._popup.querySelector('.popup__button').getAttribute('data-init')
-    }
-  }
-
   setEventListeners() {
     this._popup.querySelector('.popup__close').addEventListener('click', () => this.close());
     this._popup.addEventListener('mousedown', (evt) => this._handleOverlayClose(evt));
