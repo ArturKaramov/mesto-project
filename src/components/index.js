@@ -4,16 +4,14 @@ import { pageIsLoading } from "./utils.js";
 
 import {profileEdit, elementAdd, inputName, inputAbout, avatarButton, cardsContainer, validationSettings } from "./variables.js"
 
-//  M E S T O   -   O O P
-
-import { api } from './oop/Api';
-import FormValidator from './oop/FormValidator';
-import PopupWithForm from './oop/PopupWithForm';
-import PopupWithImage from './oop/PopupWithImage';
-import PopupForDelete from './oop/PopupForDelete';
-import Card from './oop/Card';
-import Section from './oop/Section';
-import UserInfo from './oop/UserInfo';
+import { api } from './Api';
+import FormValidator from './FormValidator';
+import PopupWithForm from './PopupWithForm';
+import PopupWithImage from './PopupWithImage';
+import PopupForDelete from './PopupForDelete';
+import Card from './Card';
+import Section from './Section';
+import UserInfo from './UserInfo';
 
 const profileFormValidation = new FormValidator(validationSettings, {formElement: document.querySelector(".popup__form[name=profile-data]")});
 profileFormValidation.enableValidation();
@@ -64,7 +62,6 @@ function addCardHandle(cardData) {
           deleteCallback: (evt) => { popupDelete.open(evt) },
           likeCallback: (evt) => { toggleLikeButton(evt) },
           handleCardClick: (cardName, cardLink) => {
-            console.log(cardName, cardLink)
             popupImage.open(cardName, cardLink); // добавлено Александром - открытие попапа с картинкой
             popupImage.setEventListeners();
           }
