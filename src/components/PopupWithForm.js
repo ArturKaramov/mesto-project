@@ -18,6 +18,9 @@ export default class PopupWithForm extends Popup {
     // Ревью 1 - Можно лучше:
     this._submitButton = this._popup.querySelector('.popup__button');
     this._submitButtonText = this._submitButton.textContent // фиксируем начальный текст кнопки 1 раз в конструкторе
+
+    // перенесено в конструктор после Ревью 2:
+    this._inputList = Array.from(this._popup.querySelectorAll('.popup__item'));
   }
 
   // Ревью 1 - Можно лучше:
@@ -32,7 +35,6 @@ export default class PopupWithForm extends Popup {
   }
 
   _getInputValues() {
-    this._inputList = Array.from(this._popup.querySelectorAll('.popup__item'));
     this._formValues = {};
     this._inputList.forEach(input => {
       this._formValues[input.name] = input.value;

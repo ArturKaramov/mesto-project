@@ -24,6 +24,7 @@ avatarFormValidation.enableValidation();
 
 
 const popupFormProfile = new PopupWithForm('.popup-profile', {handleSubmit: submitProfileForm}); // добавлено Александром, создаем экземпляр попапа "Редактировать профиль" из класса PopupWithForm
+popupFormProfile.setEventListeners(); // изменено Александром после ревью 2
 
 const popupFormPlace = new PopupWithForm('.popup-element', {handleSubmit: addCardHandle}); // добавлено Александром, создаем экземпляр попапа "Новое место" из класса PopupWithForm
 popupFormPlace.setEventListeners();
@@ -109,7 +110,6 @@ profileEdit.addEventListener('click', function () {
   inputName.value = userInfo.getUserInfo().name;
   inputAbout.value = userInfo.getUserInfo().about;
   popupFormProfile.open(); // изменено Александром, используем объект от класса PopupWithForm
-  popupFormProfile.setEventListeners();
   profileFormValidation._togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
 });
 
