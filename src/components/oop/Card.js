@@ -15,7 +15,7 @@
 // При клике на карточку эта функция должна открывать попап с картинкой.
 
 export default class Card {
-  constructor({name, link, likes, owner, _id}, {deleteCallback, likeCallback, handleCardClick}, selector, userId) {
+  constructor({name, link, likes, owner, _id}, {deleteCallback, likeCallback, handleCardClick}, selector, {userId}) {
     this._name = name;
     this._link = link;
     this._likes = likes;
@@ -26,6 +26,7 @@ export default class Card {
     this._likeCallback = likeCallback;
     this._handleCardClick = handleCardClick;
     this._selector = selector;
+    this._activeClass = 'element__like_active';
   }
 
   _getElement() {
@@ -39,25 +40,30 @@ export default class Card {
 
   _createCard() {
     this._element = this._getElement();
+    this._photo = this._element.querySelector('.element__photo');
+    this._elementName = this._element.querySelector('.element__name');
+    this._deleteButton = this._element.querySelector('.element__delete');
+    this._likeButton = this._element.querySelector('.element__like');
+    this._likesNum = this._element.querySelector('.element__likes-number')
     this._element.dataset.id = this._cardId;
-    this._element.querySelector('.element__photo').src = this._link;
-    this._element.querySelector('.element__photo').alt = this._name;
-    this._element.querySelector('.element__name').textContent = this._name;
+    this._photo.src = this._link;
+    this._photo.alt = this._name;
+    this._elementName.textContent = this._name;
     this._setLikeCondition(this._isLiked, this._likes.length)
     this._setEventListeners();
-    if (!this._isMine) {this._element.querySelector('.element__delete').remove()}
+    if (!this._isMine) {this._deleteButton.remove()}
     return this._element
   }
 
   _setLikeCondition() {
-    if (this._isLiked) {this._element.querySelector('.element__like').classList.add('element__like_active')};
-    this._element.querySelector('.element__likes-number').textContent = this._likes.length;
+    if (this._isLiked) {this._likeButton.classList.add(this._activeClass)};
+    this._likesNum.textContent = this._likes.length;
   }
 
   _setEventListeners() {
-    this._element.querySelector('.element__delete').addEventListener('click', (evt) => {this._deleteCallback(evt)});
-    this._element.querySelector('.element__like').addEventListener('click', (evt) => {this._likeCallback(evt)});
-    this._element.querySelector('.element__photo').addEventListener('click', () => {this._handleCardClick(this._name, this._link)});
+    this._deleteButton.addEventListener('click', (evt) => {this._deleteCallback(evt)});
+    this._photo.addEventListener('click', () => {this._handleCardClick(this._name, this._link)});
+    this._likeButton.addEventListener('click', (evt) => {this._likeCallback(evt)});
   }
 
   getCard() {
@@ -65,11 +71,3 @@ export default class Card {
   }
 };
 
-const changeLikeCondition = (card, likesNum) => {
-  const cardLikesNum = card.querySelector('.element__likes-number');
-  const cardLikeButton = card.querySelector('.element__like');
-  cardLikesNum.textContent = likesNum;
-  cardLikeButton.classList.toggle('element__like_active');
-};
-
-export { changeLikeCondition }

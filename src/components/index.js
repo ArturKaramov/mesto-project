@@ -2,9 +2,7 @@ import '../styles/index.css';
 
 import { pageIsLoading } from "./utils.js";
 
-import {popupCloseList, popupProfile, popupElement, popupAvatar, formAvatar, profileEdit, elementAdd, formProfile, inputName, inputAbout, profileName, profileAbout, avatarButton, profileAvatar, formCard, cardName, cardLink, popupList, cardsContainer, validationSettings } from "./variables.js"
-
-
+import {profileEdit, elementAdd, inputName, inputAbout, avatarButton, cardsContainer, validationSettings } from "./variables.js"
 
 //  M E S T O   -   O O P
 
@@ -13,7 +11,7 @@ import FormValidator from './oop/FormValidator';
 import PopupWithForm from './oop/PopupWithForm';
 import PopupWithImage from './oop/PopupWithImage';
 import PopupForDelete from './oop/PopupForDelete';
-import Card, {changeLikeCondition} from './oop/Card';
+import Card from './oop/Card';
 import Section from './oop/Section';
 import UserInfo from './oop/UserInfo';
 
@@ -38,10 +36,7 @@ const popupImage = new PopupWithImage('.popup-image'); // добавлено А�
 
 const popupDelete = new PopupForDelete('.popup-delete', {deleteCallback: deleteElement}); //изменено Артуром, создание попапа удаления
 
-const userInfo = new UserInfo({nameSelector: '.profile__name', aboutSelector: '.profile__about'}); //изменено Артуром, создание экземпляра класса UserSection
-
-
-
+const userInfo = new UserInfo({nameSelector: '.profile__name', aboutSelector: '.profile__about', avatarSelector: '.profile__avatar'}); //изменено Артуром, создание экземпляра класса UserSection
 
 function toggleLikeButton(evt) {
   const card = evt.target.closest('.element');
@@ -53,20 +48,27 @@ function toggleLikeButton(evt) {
     .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
 };
 
+const changeLikeCondition = (card, likesNum) => {
+  const cardLikesNum = card.querySelector('.element__likes-number');
+  const cardLikeButton = card.querySelector('.element__like');
+  cardLikesNum.textContent = likesNum;
+  cardLikeButton.classList.toggle('element__like_active');
+};
+
 function addCardHandle(cardData) {
   popupFormPlace.renderLoading(true); // изменено Александром, после ревью 1
   api.postNewCard(cardData) // изменено Александром, перед вызовом функции добавлено api.
     .then((card) => { //изменено Артуром, добавление карточки с помощью классов
       const cardElement = new Card(card,
         {
-          deleteCallback: (evt) => { popupDelete.open();  popupDelete.setEventListeners(evt)},
+          deleteCallback: (evt) => { popupDelete.open(evt) },
           likeCallback: (evt) => { toggleLikeButton(evt) },
           handleCardClick: (cardName, cardLink) => {
             console.log(cardName, cardLink)
             popupImage.open(cardName, cardLink); // добавлено Александром - открытие попапа с картинкой
             popupImage.setEventListeners();
           }
-        }, '.element__template', userId);
+        }, '.element__template', {userId: userInfo.getUserInfo().id});
       cardsSection.addItem(cardElement.getCard())
       popupFormPlace.close(); // изменено Александром, закрывает попап и обнуляет инпуты
     })
@@ -89,7 +91,7 @@ function submitAvatarForm({link}) {
   popupFormAvatar.renderLoading(true); // изменено Александром, после ревью 1
   api.updateAvatar(link) // изменено Александром, перед вызовом функции добавлено api.
     .then((data) => {
-      profileAvatar.src = data.avatar;
+      userInfo.setUserInfo(data);
       popupFormAvatar.close(); // изменено Александром, закрывает попап и обнуляет инпуты
     })
     .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
@@ -99,8 +101,9 @@ function submitAvatarForm({link}) {
 function deleteElement(card) { //изменено Артуром, добавил для колбэка удаления
   api.deleteCard(card.dataset.id) // изменено Александром, перед вызовом функции добавлено api.
     .then(() => {
-      card.remove()
+      card.remove();
       popupDelete.close(); // изменено Артуром, перед вызовом функции добавлено popupDelete.close.
+      popupDelete.removeEventListeners();
     })
     .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
 };
@@ -124,166 +127,33 @@ avatarButton.addEventListener('click', function() {
   avatarFormValidation._togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
 });
 
-let userId;
 let cardsSection; //изменено Артуром, секция карточек, инициализировано в глобальной области
 
 api.getInitialData() // изменено Александром, перед вызовом функции добавлено api.
   .then(([data, cards]) => {
-
     cards.forEach((card) => { // добавлено Александром - смотрим в консоли данные карточек
-      console.log(card);
     })
-
     userInfo.setUserInfo(data); //изменено Артуром, получение от сервера и добавление на страницу данных name и about
-    profileAvatar.src = data.avatar;
-    userId = data._id;
     cards.reverse();
     cardsSection = new Section({
       items: cards,
       renderer: (item) => {
-        const cardElement = new Card(item,
+        const cardElement = new Card(
+          item,
         {
-          deleteCallback: (evt) => { popupDelete.open();  popupDelete.setEventListeners(evt)},
+          deleteCallback: (evt) => { popupDelete.open(evt) },
           likeCallback: (evt) => { toggleLikeButton(evt) },
           handleCardClick: (cardName, cardLink) => {
             popupImage.open(cardName, cardLink); // добавлено Александром - открытие попапа с картинкой
             popupImage.setEventListeners();
           }
-        }, '.element__template', userId);
+        },
+        '.element__template',
+        {userId: userInfo.getUserInfo().id});
+
         cardsContainer.prepend(cardElement.getCard());
       }}, '.elements__list');
     cardsSection.renderItems() //изменено Артуром, добавление начальных карточек через классы
   })
   .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
   .finally(() => pageIsLoading(false));
-
-
-
-
-//  M E S T O   -   A P I
-
-// import {informResIsNotOk, getInitialData, setProfileData, postNewCard, updateAvatar, deleteCard, toggleLike} from './api';
-// import {enableValidation, togglePopupButtonState} from './validate.js';
-// import {openPopup, closePopup, popupIsLoading} from './modal.js'
-// import { renderCard, cardToDelete, removeCard, changeLikeCondition } from './card.js';
-
-
-// function toggleLikeButton(evt) {
-//   const card = evt.target.closest('.element');
-//   const cardId = card.getAttribute('data-id');
-//   let method = null;
-//   evt.target.classList.contains('element__like_active') ? method = 'DELETE' : method = 'PUT';
-//   toggleLike(cardId, method)
-//     .then((data) => {changeLikeCondition(card, data.likes.length)})
-//     .catch((err) => {informResIsNotOk(err)})
-// };
-
-// function addCardHandle(evt) {
-//   evt.preventDefault();
-//   popupIsLoading(true, popupElement);
-//   const cardData = {};
-//   cardData.name = cardName.value;
-//   cardData.link = cardLink.value;
-//   postNewCard(cardData)
-//     .then((card) => {
-//       renderCard(card, userId, toggleLikeButton)
-//       closePopup(popupElement)
-//     })
-//     .catch((err) => {informResIsNotOk(err)})
-//     .finally(() => {popupIsLoading(false, popupElement)})
-// };
-
-// function submitProfileForm(evt) {
-//   evt.preventDefault();
-//   popupIsLoading(true, popupProfile);
-//   const user = {}
-//   user.name = inputName.value;
-//   user.about = inputAbout.value;
-//   setProfileData(user)
-//     .then((data) => {
-//       profileName.textContent = data.name
-//       profileAbout.textContent = data.about
-//       closePopup(popupProfile)
-//     })
-//     .catch((err) => {informResIsNotOk(err)})
-//     .finally(() => {popupIsLoading(false, popupProfile)});
-// };
-
-// function submitAvatarForm(evt) {
-//   evt.preventDefault();
-//   popupIsLoading(true, popupAvatar);
-//   const newAvatar = popupAvatar.querySelector('.popup__item').value;
-//   updateAvatar(newAvatar)
-//     .then((data) => {
-//       profileAvatar.src = data.avatar
-//       closePopup(popupAvatar)
-//     })
-//     .catch((err) => {informResIsNotOk(err)})
-//     .finally(() => {popupIsLoading(false, popupAvatar)});
-// };
-
-// formProfile.addEventListener('submit', submitProfileForm);
-
-// formCard.addEventListener('submit', addCardHandle);
-
-// formAvatar.addEventListener('submit', submitAvatarForm);
-
-// buttonDelete.addEventListener('click', function() {
-//   deleteCard(cardToDelete.dataset.id)
-//     .then(() => {
-//       removeCard(cardToDelete)
-//       closePopup(popupDelete)
-//     })
-//     .catch((err) => {informResIsNotOk(err)})
-// });
-
-// profileEdit.addEventListener('click', function () {
-//   inputName.value = profileName.textContent;
-//   inputAbout.value = profileAbout.textContent;
-//   openPopup(popupProfile);
-//   togglePopupButtonState(popupProfile);
-// });
-
-// elementAdd.addEventListener('click', function () {
-//   formCard.reset();
-//   openPopup(popupElement);
-//   togglePopupButtonState(popupElement);
-// });
-
-// avatarButton.addEventListener('click', function() {
-//   openPopup(popupAvatar);
-//   togglePopupButtonState(popupAvatar);
-// });
-
-// popupList.forEach(function(popup) {
-//   popup.addEventListener('mousedown', function(evt) {
-//     if (evt.target === evt.currentTarget) {closePopup(popup)}
-//   });
-// });
-
-// popupCloseList.forEach((closeButton) => {
-//   closeButton.addEventListener('click', (evt) => {closePopup(evt.target.closest('.popup'))})
-// })
-
-// enableValidation({
-//   formSelector: '.popup__form',
-//   inputSelector: '.popup__item',
-//   submitButtonSelector: '.popup__button',
-//   inputErrorClass: 'popup__item_type_error'
-// });
-
-// let userId;
-
-// getInitialData()
-//   .then(([data, cards]) => {
-//     profileName.textContent = data.name;
-//     profileAbout.textContent = data.about;
-//     profileAvatar.src = data.avatar;
-//     userId = data._id;
-//     cards.reverse()
-//     cards.forEach((card) => {
-//       renderCard(card, userId, toggleLikeButton)
-//     })
-//   })
-//   .catch((err) => {informResIsNotOk(err)})
-//   .finally(() => pageIsLoading(false));
