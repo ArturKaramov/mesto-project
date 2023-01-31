@@ -1,4 +1,32 @@
+/* новый код Александра */
+
 .profile__avatar-button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background-image: url("../../../images/pencil-big.svg");
+  background-repeat: no-repeat;
+  background-color: rgba(0, 0, 0, .8);
+  background-position: center;
+  background-size: 20%;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  transition: .3s;
+  cursor: pointer;
+}
+
+.profile__avatar-button:hover {
+  opacity: 1;
+}
+
+
+/* старый код Артура */
+
+/* .profile__avatar-button {
   border: none;
   padding: 0;
   margin: 0;
@@ -22,4 +50,4 @@
   background-image: url("../../../images/pencil-big.svg");
   background-position: center;
   background-repeat: no-repeat;
-}
+} */

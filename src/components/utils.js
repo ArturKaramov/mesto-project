@@ -1,4 +1,4 @@
-const pageLoading = document.querySelector('.page_loading');
+import { pageLoading } from "./variables";
 
 const pageIsLoading = (isLoading) => {
   if (isLoading) {
