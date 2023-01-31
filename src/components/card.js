@@ -1,86 +1,54 @@
-//  M E S T O   -   O O P
+import { openPopup } from "./modal.js";
 
-// Поработайте с функциональностью работы карточек и валидации форм.
-// Всю валидацию форм вы до этого писали в отдельном файле, а работу карточек — в другом.
-// Теперь преобразуйте функции, которые существовали ранее, в единое целое — классы Card и FormValidator.
-// В этом пункте задания поговорим про класс Card.
-// Организуйте в классе Card код, который создаёт карточку с текстом и ссылкой на изображение:
+import { toggleLike } from "./api.js";
 
-// - принимает в конструктор её данные и селектор её template-элемента;
-// - содержит приватные методы, которые работают с разметкой, устанавливают слушателей событий;
-// - содержит приватные методы для каждого обработчика;
-// - содержит один публичный метод, который возвращает полностью работоспособный и наполненный данными элемент карточки.
-// Для каждой карточки создайте экземпляр класса Card. Когда дойдёте до реализации классов Popup,
-// свяжите класс Card c попапом. Сделайте так, чтобы Card принимал в конструктор функцию handleCardClick.
-// При клике на карточку эта функция должна открывать попап с картинкой.
+import {templateElement, cardsContainer, popupImg, popupDelete, popupImgPhoto, popupCaption} from "./variables.js"
 
-export default class Card {
-  constructor({name, link, likes, owner, _id}, {deleteCallback, likeCallback, handleCardClick}, selector, {userId}) {
-    this._name = name;
-    this._link = link;
-    this._likes = likes;
-    this._isLiked = likes.some((like) => {return like._id === userId});
-    this._isMine = owner._id === userId;
-    this._cardId = _id;
-    this._deleteCallback = deleteCallback;
-    this._likeCallback = likeCallback;
-    this._handleCardClick = handleCardClick;
-    this._selector = selector;
-    this._activeClass = 'element__like_active';
-  }
+let cardToDelete = null;
 
-  _getElement() {
-    const cardElement = document
-      .querySelector(this._selector)
-      .content
-      .querySelector('.element')
-      .cloneNode(true)
-    return cardElement
-  }
-
-  _createCard() {
-    this._element = this._getElement();
-    this._photo = this._element.querySelector('.element__photo');
-    this._elementName = this._element.querySelector('.element__name');
-    this._deleteButton = this._element.querySelector('.element__delete');
-    this._likeButton = this._element.querySelector('.element__like');
-    this._likesNum = this._element.querySelector('.element__likes-number')
-    this._element.dataset.id = this._cardId;
-    this._photo.src = this._link;
-    this._photo.alt = this._name;
-    this._elementName.textContent = this._name;
-    this._setLikeCondition()
-    this._setEventListeners();
-    if (!this._isMine) {this._deleteButton.remove()}
-    return this._element
-  }
-
-  _setLikeCondition() {
-    if (this._isLiked) {this._likeButton.classList.add(this._activeClass)}
-    else {this._likeButton.classList.remove(this._activeClass)}
-    this._likesNum.textContent = this._likes.length;
-  }
-
-  _toggleLike() {
-    let method = null;
-    this._isLiked ? method = 'DELETE' : method = 'PUT';
-    this._likeCallback(this, this._cardId, method)
-  }
-
-  changeLikeCondition(data) {
-    this._likes = data.likes;
-    this._isLiked = !this._isLiked;
-    this._setLikeCondition()
-  }
-
-  _setEventListeners() {
-    this._deleteButton.addEventListener('click', () => {this._deleteCallback(this._element)});
-    this._photo.addEventListener('click', () => {this._handleCardClick(this._name, this._link)});
-    this._likeButton.addEventListener('click', () => {this._toggleLike()});
-  }
-
-  getCard() {
-    return this._createCard()
-  }
+const openDeletePopup = (evt) => {
+  cardToDelete = evt.target.closest('.element');
+  openPopup(popupDelete);
 };
 
+const removeCard = (card) => {card.remove()}
+
+const changeLikeCondition = (card, likesNum) => {
+  const cardLikesNum = card.querySelector('.element__likes-number');
+  const cardLikeButton = card.querySelector('.element__like');
+  cardLikesNum.textContent = likesNum;
+  cardLikeButton.classList.toggle('element__like_active');
+};
+
+function viewCard(cardData) {
+  popupImgPhoto.src = cardData.link;
+  popupImgPhoto.alt = cardData.name;
+  popupCaption.textContent = cardData.name;
+  openPopup(popupImg);
+};
+
+function createCard(cardData, id, likeCallback) {
+  const card = templateElement.querySelector('.element').cloneNode(true);
+  const cardPhoto = card.querySelector('.element__photo');
+  const cardTrash = card.querySelector('.element__delete');
+  const cardLike = card.querySelector('.element__like');
+  cardPhoto.src = cardData.link;
+  cardPhoto.alt = cardData.name;
+  card.querySelector('.element__name').textContent = cardData.name;
+  card.querySelector('.element__likes-number').textContent = cardData.likes.length;
+  if (cardData.likes.some(function (like) {
+    return like._id === id;
+  })) {cardLike.classList.add('element__like_active')};
+  cardLike.addEventListener('click', likeCallback);
+  if (cardData.owner._id !== id) {(cardTrash.remove())}
+  card.dataset.id = cardData._id;
+  cardTrash.addEventListener('click', openDeletePopup);
+  cardPhoto.addEventListener('click', function() {
+    viewCard(cardData);
+  });
+  return card;
+};
+
+const renderCard = (cardData, id, likeCallback) => {cardsContainer.prepend(createCard(cardData, id, likeCallback))};
+
+export {templateElement, cardsContainer, popupImg, popupImgPhoto, popupCaption, changeLikeCondition, viewCard, createCard, renderCard, cardToDelete, removeCard}

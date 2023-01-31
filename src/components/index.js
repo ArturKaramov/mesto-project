@@ -1,137 +1,134 @@
 import '../styles/index.css';
 
+import { renderCard, cardToDelete, removeCard, changeLikeCondition } from './card.js';
+
+import {openPopup, closePopup, popupIsLoading} from './modal.js'
+
+import {enableValidation, togglePopupButtonState} from './validate.js';
+
+import {informResIsNotOk, getInitialData, setProfileData, postNewCard, updateAvatar, deleteCard, toggleLike} from './api';
+
 import { pageIsLoading } from "./utils.js";
 
-import {profileEdit, elementAdd, inputName, inputAbout, avatarButton, cardsContainer, validationSettings } from "./variables.js"
+import {popupCloseList, popupProfile, popupElement, popupAvatar, formAvatar, profileEdit, elementAdd, formProfile, inputName, inputAbout, profileName, profileAbout, avatarButton, profileAvatar, formCard, cardName, cardLink, popupList, buttonDelete, popupDelete } from "./variables.js"
 
-import { api } from './Api';
-import FormValidator from './FormValidator';
-import PopupWithForm from './PopupWithForm';
-import PopupWithImage from './PopupWithImage';
-import PopupForDelete from './PopupForDelete';
-import Card from './Card';
-import Section from './Section';
-import UserInfo from './UserInfo';
-
-const profileFormValidation = new FormValidator(validationSettings, {formElement: document.querySelector(".popup__form[name=profile-data]")});
-profileFormValidation.enableValidation();
-
-const cardFormValidation = new FormValidator(validationSettings, {formElement: document.querySelector(".popup__form[name=element-data]")});
-cardFormValidation.enableValidation();
-
-const avatarFormValidation = new FormValidator(validationSettings, {formElement: document.querySelector(".popup__form[name=avatar-link]")});
-avatarFormValidation.enableValidation();
-
-
-const popupFormProfile = new PopupWithForm('.popup-profile', {handleSubmit: submitProfileForm}); // добавлено Александром, создаем экземпляр попапа "Редактировать профиль" из класса PopupWithForm
-popupFormProfile.setEventListeners(); // изменено Александром после ревью 2
-
-const popupFormPlace = new PopupWithForm('.popup-element', {handleSubmit: addCardHandle}); // добавлено Александром, создаем экземпляр попапа "Новое место" из класса PopupWithForm
-popupFormPlace.setEventListeners();
-
-const popupFormAvatar = new PopupWithForm('.popup-avatar', {handleSubmit: submitAvatarForm}); // добавлено Александром, создаем экземпляр попапа "Обновить аватар" из класса PopupWithForm
-popupFormAvatar.setEventListeners();
-
-const popupImage = new PopupWithImage('.popup-image'); // добавлено Александром, создаем экземпляр попапа "Картинка" из класса PopupWithImage
-popupImage.setEventListeners();
-
-const popupDelete = new PopupForDelete('.popup-delete', {deleteCallback: deleteElement}); //изменено Артуром, создание попапа удаления
-popupDelete.setEventListeners();
-
-const userInfo = new UserInfo({nameSelector: '.profile__name', aboutSelector: '.profile__about', avatarSelector: '.profile__avatar'}); //изменено Артуром, создание экземпляра класса UserSection
-
-function toggleLikeButton(card, cardId, method) {
-  api.toggleLike(cardId, method)
-    .then((data) => { card.changeLikeCondition(data) })
-    .catch((err) => { api.informResIsNotOk(err) })
+function toggleLikeButton(evt) {
+  const card = evt.target.closest('.element');
+  const cardId = card.getAttribute('data-id');
+  let method = null;
+  evt.target.classList.contains('element__like_active') ? method = 'DELETE' : method = 'PUT';
+  toggleLike(cardId, method)
+    .then((data) => {changeLikeCondition(card, data.likes.length)})
+    .catch((err) => {informResIsNotOk(err)})
 };
 
-function addCardHandle(cardData) {
-  popupFormPlace.renderLoading(true); // изменено Александром, после ревью 1
-  api.postNewCard(cardData) // изменено Александром, перед вызовом функции добавлено api.
+function addCardHandle(evt) {
+  evt.preventDefault();
+  popupIsLoading(true, popupElement);
+  const cardData = {};
+  cardData.name = cardName.value;
+  cardData.link = cardLink.value;
+  postNewCard(cardData)
     .then((card) => {
-      cardsSection.addItem(createCardElement(card));
-      popupFormPlace.close(); // изменено Александром, закрывает попап и обнуляет инпуты
+      renderCard(card, userId, toggleLikeButton)
+      closePopup(popupElement)
     })
-    .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
-    .finally(() => {popupFormPlace.renderLoading(false)}) // изменено Александром, после ревью 1
+    .catch((err) => {informResIsNotOk(err)})
+    .finally(() => {popupIsLoading(false, popupElement)})
 };
 
-function submitProfileForm(profile) {
-  popupFormProfile.renderLoading(true); // изменено Александром, после ревью 1
-  api.setProfileData(profile) // изменено Александром, перед вызовом функции добавлено api.
+function submitProfileForm(evt) {
+  evt.preventDefault();
+  popupIsLoading(true, popupProfile);
+  const user = {}
+  user.name = inputName.value;
+  user.about = inputAbout.value;
+  setProfileData(user)
     .then((data) => {
-      userInfo.setUserInfo(data);
-      popupFormProfile.close(); // изменено Александром, закрывает попап и обнуляет инпуты
+      profileName.textContent = data.name
+      profileAbout.textContent = data.about
+      closePopup(popupProfile)
     })
-    .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
-    .finally(() => {popupFormProfile.renderLoading(false)}); // изменено Александром, после ревью 1
+    .catch((err) => {informResIsNotOk(err)})
+    .finally(() => {popupIsLoading(false, popupProfile)});
 };
 
-function submitAvatarForm({link}) {
-  popupFormAvatar.renderLoading(true); // изменено Александром, после ревью 1
-  api.updateAvatar(link) // изменено Александром, перед вызовом функции добавлено api.
+function submitAvatarForm(evt) {
+  evt.preventDefault();
+  popupIsLoading(true, popupAvatar);
+  const newAvatar = popupAvatar.querySelector('.popup__item').value;
+  updateAvatar(newAvatar)
     .then((data) => {
-      userInfo.setUserInfo(data);
-      popupFormAvatar.close(); // изменено Александром, закрывает попап и обнуляет инпуты
+      profileAvatar.src = data.avatar
+      closePopup(popupAvatar)
     })
-    .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
-    .finally(() => {popupFormAvatar.renderLoading(false)}); // изменено Александром, после ревью 1
+    .catch((err) => {informResIsNotOk(err)})
+    .finally(() => {popupIsLoading(false, popupAvatar)});
 };
 
-function deleteElement(card) {
-  api.deleteCard(card.dataset.id) // изменено Александром, перед вызовом функции добавлено api.
+formProfile.addEventListener('submit', submitProfileForm);
+
+formCard.addEventListener('submit', addCardHandle);
+
+formAvatar.addEventListener('submit', submitAvatarForm);
+
+buttonDelete.addEventListener('click', function() {
+  deleteCard(cardToDelete.dataset.id)
     .then(() => {
-      card.remove();
-      popupDelete.close();
+      removeCard(cardToDelete)
+      closePopup(popupDelete)
     })
-    .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
-};
-
-const createCardElement = (item) => {
-  const cardElement = new Card(
-    item,
-  {
-    deleteCallback: (evt) => { popupDelete.open(evt) },
-    likeCallback: (card, cardId, method) => { toggleLikeButton(card, cardId, method) },
-    handleCardClick: (cardName, cardLink) => {
-      popupImage.open(cardName, cardLink); // добавлено Александром - открытие попапа с картинкой
-      popupImage.setEventListeners();
-    }
-  },
-  '.element__template',
-  {userId: userInfo.getUserId()});
-  return cardElement.getCard()
-}
+    .catch((err) => {informResIsNotOk(err)})
+});
 
 profileEdit.addEventListener('click', function () {
-  const user = userInfo.getUserInfo()
-  inputName.value = user.name;
-  inputAbout.value = user.about;
-  popupFormProfile.open(); // изменено Александром, используем объект от класса PopupWithForm
-  profileFormValidation._togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
+  inputName.value = profileName.textContent;
+  inputAbout.value = profileAbout.textContent;
+  openPopup(popupProfile);
+  togglePopupButtonState(popupProfile);
 });
 
 elementAdd.addEventListener('click', function () {
-  popupFormPlace.open(); // изменено Александром, используем объект от класса PopupWithForm
-  cardFormValidation._togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
+  formCard.reset();
+  openPopup(popupElement);
+  togglePopupButtonState(popupElement);
 });
 
 avatarButton.addEventListener('click', function() {
-  popupFormAvatar.open(); // изменено Александром, используем объект от класса PopupWithForm
-  avatarFormValidation._togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
+  openPopup(popupAvatar);
+  togglePopupButtonState(popupAvatar);
 });
 
-let cardsSection;
+popupList.forEach(function(popup) {
+  popup.addEventListener('mousedown', function(evt) {
+    if (evt.target === evt.currentTarget) {closePopup(popup)}
+  });
+});
 
-api.getInitialData()
+popupCloseList.forEach((closeButton) => {
+  closeButton.addEventListener('click', (evt) => {closePopup(evt.target.closest('.popup'))})
+})
+
+enableValidation({
+  formSelector: '.popup__form',
+  inputSelector: '.popup__item',
+  submitButtonSelector: '.popup__button',
+  inputErrorClass: 'popup__item_type_error'
+});
+
+let userId;
+
+getInitialData()
   .then(([data, cards]) => {
-    userInfo.setUserInfo(data);
-    cardsSection = new Section({
-      items: cards,
-      renderer: (item) => { cardsContainer.append(createCardElement(item))}
-    }, '.elements__list');
-    cardsSection.renderItems()
+    profileName.textContent = data.name;
+    profileAbout.textContent = data.about;
+    profileAvatar.src = data.avatar;
+    userId = data._id;
+    cards.reverse()
+    cards.forEach((card) => {
+      renderCard(card, userId, toggleLikeButton)
+    })
   })
-  .catch((err) => {api.informResIsNotOk(err)})
+  .catch((err) => {informResIsNotOk(err)})
   .finally(() => pageIsLoading(false));
+

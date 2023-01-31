@@ -16,10 +16,9 @@
   <main class="content">
     <section class="profile">
       <div class="profile__data">
-        <div class="profile__avatar-box">
+        <button class="profile__avatar-button">
           <img class="profile__avatar" src="#" alt="Аватар пользователя">
-          <button class="profile__avatar-button" type="button"></button>
-        </div>
+        </button>
         <div class="profile__info">
           <h1 class="profile__name"> </h1>
           <button type="button" class="profile__edit-button">
@@ -38,10 +37,8 @@
     </div>
   </main>
   <footer class="footer">
-    <p class="footer__copyright">&copy;2023 Mesto Russia</p>
+    <p class="footer__copyright">&copy;2022 Mesto Russia</p>
   </footer>
-
-  <!-- Модальное окно - Редактировать профиль -->
   <div class="popup popup-profile">
     <div class="popup__container">
       <button type="button" class="popup__close">
@@ -60,7 +57,6 @@
     </div>
   </div>
 
-  <!-- Модальное окно - Новое место -->
   <div class="popup popup-element">
     <div class="popup__container">
       <button type="button" class="popup__close">
@@ -74,12 +70,11 @@
         <input type="url" id="url-input" class="popup__item card-add__link" name="link"
             placeholder="Ссылка на картинку" required>
         <span class="popup__error url-input-error"></span>
-        <button type="submit" class="popup__button card-add__save" data-init="Создать" data-load="Создание..." disabled>Создать</button>
+        <button type="submit" class="popup__button card-add__save" data-init="Создать" data-load="Создание...">Создать</button>
       </form>
     </div>
   </div>
 
-  <!-- Модальное окно - Открытие попапа с картинкой -->
   <div class="popup popup-image">
     <div class="popup-image__container">
       <button type="button" class="popup__close">
@@ -92,7 +87,6 @@
     </div>
   </div>
 
-  <!-- Модальное окно - Вы уверены? -->
   <div class="popup popup-delete">
     <div class="popup__container">
       <button type="button" class="popup__close">
@@ -103,7 +97,6 @@
     </div>
   </div>
 
-  <!-- Модальное окно - Обновить аватар -->
   <div class="popup popup-avatar">
     <div class="popup__container">
       <button type="button" class="popup__close">
@@ -113,7 +106,7 @@
       <form class="popup__form" name="avatar-link" novalidate>
         <input type="url" id="ava-url-input" class="popup__item avatar__link" name="link" placeholder="Ссылка на картинку" required>
         <span class="popup__error ava-url-input-error"></span>
-        <button type="submit" class="popup__button" data-init="Создать" data-load="Создание..." disabled>Создать</button>
+        <button type="submit" class="popup__button" data-init="Создать" data-load="Создание...">Создать</button>
       </form>
     </div>
   </div>
