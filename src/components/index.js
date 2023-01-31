@@ -40,6 +40,8 @@ popupDelete.setEventListeners();
 
 const userInfo = new UserInfo({nameSelector: '.profile__name', aboutSelector: '.profile__about', avatarSelector: '.profile__avatar'}); //изменено Артуром, создание экземпляра класса UserSection
 
+const cardsSection = new Section({renderer: (item) => {cardsContainer.append(createCardElement(item))}}, '.elements__list')
+
 function toggleLikeButton(card, cardId, method) {
   api.toggleLike(cardId, method)
     .then((data) => { card.changeLikeCondition(data) })
@@ -122,16 +124,10 @@ avatarButton.addEventListener('click', function() {
   avatarFormValidation._togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
 });
 
-let cardsSection;
-
 api.getInitialData()
   .then(([data, cards]) => {
     userInfo.setUserInfo(data);
-    cardsSection = new Section({
-      items: cards,
-      renderer: (item) => { cardsContainer.append(createCardElement(item))}
-    }, '.elements__list');
-    cardsSection.renderItems()
+    cardsSection.renderItems(cards);
   })
   .catch((err) => {api.informResIsNotOk(err)})
   .finally(() => pageIsLoading(false));
