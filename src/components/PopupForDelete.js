@@ -8,22 +8,18 @@ export default class PopupForDelete extends Popup {
     this._confirmButton = this._popup.querySelector('.popup__button');
   }
 
-  open(evt) {
-    super.open()
-    this._cardToDelete = this._cardToDelete = evt.target.closest('.element');
-    this.setEventListeners()
-  }
-
   _deleteFunction() {
-    this._deleteCallback(this._cardToDelete);
+    this._deleteCallback(this._card);
   }
 
-  setEventListeners() {
-    super.setEventListeners();
+  open(card) {
+    super.open()
+    this._card = card;
     this._confirmButton.addEventListener('click', this._deleteFunction);
   }
 
-  removeEventListeners() {
-    this._confirmButton.removeEventListener('click',  this._deleteFunction);
+  close() {
+    super.close()
+    this._confirmButton.removeEventListener('click', this._deleteFunction);
   }
 }
