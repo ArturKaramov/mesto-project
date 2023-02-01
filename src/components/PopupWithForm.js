@@ -19,8 +19,8 @@ export default class PopupWithForm extends Popup {
     this._submitButton = this._popup.querySelector('.popup__button');
     this._submitButtonText = this._submitButton.textContent // фиксируем начальный текст кнопки 1 раз в конструкторе
 
-    // перенесено в конструктор после Ревью 2:
-    this._inputList = Array.from(this._popup.querySelectorAll('.popup__item'));
+    this._inputList = Array.from(this._popup.querySelectorAll('.popup__item')); // перенесено в конструктор после Ревью 2
+    this._form = this._popup.querySelector('.popup__form'); // перенесено в конструктор после Ревью 3
   }
 
   // Ревью 1 - Можно лучше:
@@ -53,6 +53,6 @@ export default class PopupWithForm extends Popup {
 
   close() {
     super.close();
-    this._popup.querySelector('.popup__form').reset();
+    this._form.reset(); // исправлено после ревью 3
   }
 }

@@ -1,17 +1,17 @@
-import '../styles/index.css';
+import './index.css';
 
-import { pageIsLoading } from "./utils.js";
+import { pageIsLoading } from "../utils/utils";
 
-import {profileEdit, elementAdd, inputName, inputAbout, avatarButton, cardsContainer, validationSettings } from "./variables.js"
+import {profileEdit, elementAdd, inputName, inputAbout, avatarButton, cardsContainer, validationSettings } from "../utils/variables"
 
-import { api } from './Api';
-import FormValidator from './FormValidator';
-import PopupWithForm from './PopupWithForm';
-import PopupWithImage from './PopupWithImage';
-import PopupForDelete from './PopupForDelete';
-import Card from './Card';
-import Section from './Section';
-import UserInfo from './UserInfo';
+import { api } from '../components/Api';
+import FormValidator from '../components/FormValidator';
+import PopupWithForm from '../components/PopupWithForm';
+import PopupWithImage from '../components/PopupWithImage';
+import PopupForDelete from '../components/PopupForDelete';
+import Card from '../components/Card';
+import Section from '../components/Section';
+import UserInfo from '../components/UserInfo';
 
 const profileFormValidation = new FormValidator(validationSettings, {formElement: document.querySelector(".popup__form[name=profile-data]")});
 profileFormValidation.enableValidation();
@@ -111,17 +111,17 @@ profileEdit.addEventListener('click', function () {
   inputName.value = user.name;
   inputAbout.value = user.about;
   popupFormProfile.open(); // изменено Александром, используем объект от класса PopupWithForm
-  profileFormValidation._togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
+  profileFormValidation.togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
 });
 
 elementAdd.addEventListener('click', function () {
   popupFormPlace.open(); // изменено Александром, используем объект от класса PopupWithForm
-  cardFormValidation._togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
+  cardFormValidation.togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
 });
 
 avatarButton.addEventListener('click', function() {
   popupFormAvatar.open(); // изменено Александром, используем объект от класса PopupWithForm
-  avatarFormValidation._togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
+  avatarFormValidation.togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
 });
 
 api.getInitialData()
