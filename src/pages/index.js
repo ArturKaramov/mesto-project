@@ -34,12 +34,12 @@ popupFormAvatar.setEventListeners();
 const popupImage = new PopupWithImage('.popup-image'); // добавлено Александром, создаем экземпляр попапа "Картинка" из класса PopupWithImage
 popupImage.setEventListeners();
 
-const popupDelete = new PopupForDelete('.popup-delete', {deleteCallback: deleteElement}); //изменено Артуром, создание попапа удаления
+const popupDelete = new PopupForDelete('.popup-delete', {deleteCallback: deleteElement});
 popupDelete.setEventListeners();
 
-const userInfo = new UserInfo({nameSelector: '.profile__name', aboutSelector: '.profile__about', avatarSelector: '.profile__avatar'}); //изменено Артуром, создание экземпляра класса UserSection
+const userInfo = new UserInfo({nameSelector: '.profile__name', aboutSelector: '.profile__about', avatarSelector: '.profile__avatar'});
 
-const cardsSection = new Section({renderer: (item) => {cardsContainer.append(createCardElement(item))}}, '.elements__list')
+const cardsSection = new Section({renderer: (item) => {cardsSection.appendItem(createCardElement(item))}}, '.elements__list')
 
 function toggleLikeButton(card, cardId, method) {
   api.toggleLike(cardId, method)
@@ -81,9 +81,9 @@ function submitAvatarForm({link}) {
 };
 
 function deleteElement(card) {
-  api.deleteCard(card.dataset.id) // изменено Александром, перед вызовом функции добавлено api.
+  api.deleteCard(card.cardId) // изменено Александром, перед вызовом функции добавлено api.
     .then(() => {
-      card.remove();
+      card.removeCard();
       popupDelete.close();
     })
     .catch((err) => {api.informResIsNotOk(err)}) // изменено Александром, перед вызовом функции добавлено api.
@@ -95,10 +95,7 @@ const createCardElement = (item) => {
   {
     deleteCallback: (evt) => { popupDelete.open(evt) },
     likeCallback: (card, cardId, method) => { toggleLikeButton(card, cardId, method) },
-    handleCardClick: (cardName, cardLink) => {
-      popupImage.open(cardName, cardLink); // добавлено Александром - открытие попапа с картинкой
-      popupImage.setEventListeners();
-    }
+    handleCardClick: (cardName, cardLink) => { popupImage.open(cardName, cardLink) }
   },
   '.element__template',
   {userId: userInfo.getUserId()});

@@ -21,7 +21,7 @@ export default class Card {
     this._likes = likes;
     this._isLiked = likes.some((like) => {return like._id === userId});
     this._isMine = owner._id === userId;
-    this._cardId = _id;
+    this.cardId = _id;
     this._deleteCallback = deleteCallback;
     this._likeCallback = likeCallback;
     this._handleCardClick = handleCardClick;
@@ -45,7 +45,6 @@ export default class Card {
     this._deleteButton = this._element.querySelector('.element__delete');
     this._likeButton = this._element.querySelector('.element__like');
     this._likesNum = this._element.querySelector('.element__likes-number')
-    this._element.dataset.id = this._cardId;
     this._photo.src = this._link;
     this._photo.alt = this._name;
     this._elementName.textContent = this._name;
@@ -64,7 +63,7 @@ export default class Card {
   _toggleLike() {
     let method = null;
     this._isLiked ? method = 'DELETE' : method = 'PUT';
-    this._likeCallback(this, this._cardId, method)
+    this._likeCallback(this, this.cardId, method)
   }
 
   changeLikeCondition(data) {
@@ -73,8 +72,12 @@ export default class Card {
     this._setLikeCondition()
   }
 
+  removeCard() {
+    this._element.remove()
+  }
+
   _setEventListeners() {
-    this._deleteButton.addEventListener('click', () => {this._deleteCallback(this._element)});
+    this._deleteButton.addEventListener('click', () => { this._deleteCallback(this) });
     this._photo.addEventListener('click', () => {this._handleCardClick(this._name, this._link)});
     this._likeButton.addEventListener('click', () => {this._toggleLike()});
   }
