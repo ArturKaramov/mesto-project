@@ -1,8 +1,7 @@
 import './index.css';
 
 import { pageIsLoading } from "../utils/utils";
-
-import {profileEdit, elementAdd, inputName, inputAbout, avatarButton, cardsContainer, validationSettings } from "../utils/variables"
+import {profileEdit, elementAdd, inputName, inputAbout, avatarButton, cardsContainer, validationSettings } from "../utils/variables";
 
 import { api } from '../components/Api';
 import FormValidator from '../components/FormValidator';
