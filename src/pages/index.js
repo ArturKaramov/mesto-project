@@ -81,7 +81,7 @@ function submitAvatarForm({link}) {
 };
 
 function deleteElement(card) {
-  api.deleteCard(card.cardId) // изменено Александром, перед вызовом функции добавлено api.
+  api.deleteCard(card._cardId) // изменено Александром, перед вызовом функции добавлено api.
     .then(() => {
       card.removeCard();
       popupDelete.close();

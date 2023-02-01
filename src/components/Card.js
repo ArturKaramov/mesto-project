@@ -21,7 +21,7 @@ export default class Card {
     this._likes = likes;
     this._isLiked = likes.some((like) => {return like._id === userId});
     this._isMine = owner._id === userId;
-    this.cardId = _id;
+    this._cardId = _id;
     this._deleteCallback = deleteCallback;
     this._likeCallback = likeCallback;
     this._handleCardClick = handleCardClick;
@@ -63,7 +63,7 @@ export default class Card {
   _toggleLike() {
     let method = null;
     this._isLiked ? method = 'DELETE' : method = 'PUT';
-    this._likeCallback(this, this.cardId, method)
+    this._likeCallback(this, this._cardId, method)
   }
 
   changeLikeCondition(data) {
