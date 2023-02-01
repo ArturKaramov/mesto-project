@@ -1,7 +1,9 @@
 import './index.css';
 
 import { pageIsLoading } from "../utils/utils";
-import {profileEdit, elementAdd, inputName, inputAbout, avatarButton, cardsContainer, validationSettings } from "../utils/variables";
+
+// после ревью 4 добавлены константы formAvatar, formProfile, formElement
+import {profileEdit, elementAdd, inputName, inputAbout, avatarButton, cardsContainer, validationSettings, formAvatar, formProfile, formElement } from "../utils/variables";
 
 import { api } from '../components/Api';
 import FormValidator from '../components/FormValidator';
@@ -107,17 +109,17 @@ profileEdit.addEventListener('click', function () {
   inputName.value = user.name;
   inputAbout.value = user.about;
   popupFormProfile.open(); // изменено Александром, используем объект от класса PopupWithForm
-  profileFormValidation.togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
+  profileFormValidation.togglePopupButtonState(formProfile); // изменено Александром после ревью 4
 });
 
 elementAdd.addEventListener('click', function () {
   popupFormPlace.open(); // изменено Александром, используем объект от класса PopupWithForm
-  cardFormValidation.togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
+  cardFormValidation.togglePopupButtonState(formElement); // изменено Александром после ревью 4
 });
 
 avatarButton.addEventListener('click', function() {
   popupFormAvatar.open(); // изменено Александром, используем объект от класса PopupWithForm
-  avatarFormValidation.togglePopupButtonState(); // изменено Александром, перед вызовом функции добавлено formValidation.
+  avatarFormValidation.togglePopupButtonState(formAvatar); // изменено Александром после ревью 4
 });
 
 api.getInitialData()

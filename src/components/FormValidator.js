@@ -11,33 +11,25 @@
 
 
 export default class FormValidator {
-  constructor({ formSelector, inputSelector, submitButtonSelector, inputErrorClass }, {formElement}, inputList, buttonElement) {
-
-    this.formSelector = formSelector;
-    this.inputSelector = inputSelector;
-    this.submitButtonSelector = submitButtonSelector;
-    this.inputErrorClass = inputErrorClass;
-
-    this.formElement = formElement;
-
-    this._inputList = inputList;
-    this._buttonElement = buttonElement;
-
-    this._inputList = Array.from(this.formElement.querySelectorAll(this.inputSelector));
-    this._buttonElement = this.formElement.querySelector(this.submitButtonSelector);
+  constructor({ formSelector, inputSelector, submitButtonSelector, inputErrorClass }, {formElement}) { // исправлено после ревью 4
+    this._formSelector = formSelector;
+    this._inputSelector = inputSelector;
+    this._submitButtonSelector = submitButtonSelector;
+    this._inputErrorClass = inputErrorClass;
+    this._formElement = formElement;
   }
 
   _showInputError(inputElement, errorMessage) {
-    const errorElement = this.formElement.querySelector(`.${inputElement.id}-error`);
+    const errorElement = this._formElement.querySelector(`.${inputElement.id}-error`);
 
-    inputElement.classList.add(this.inputErrorClass);
+    inputElement.classList.add(this._inputErrorClass);
     errorElement.textContent = errorMessage;
   }
 
   _hideInputError(inputElement) {
-    const errorElement = this.formElement.querySelector(`.${inputElement.id}-error`);
+    const errorElement = this._formElement.querySelector(`.${inputElement.id}-error`);
 
-    inputElement.classList.remove(this.inputErrorClass);
+    inputElement.classList.remove(this._inputErrorClass);
     errorElement.textContent = '';
   }
 
@@ -67,20 +59,35 @@ export default class FormValidator {
       buttonElement.removeAttribute("disabled", "")}
   }
 
-  togglePopupButtonState() { // Александр сделал метод публичным
-    this._toggleButtonState(this._inputList, this._buttonElement);
+  togglePopupButtonState(formElement) { // Александр сделал метод публичным  // исправлено после ревью 4
+    const inputList = Array.from(formElement.querySelectorAll(this._inputSelector));
+    const buttonElement = formElement.querySelector(this._submitButtonSelector);
+
+    inputList.forEach((inputElement) => {
+      this._hideInputError(inputElement);
+    });
+
+    this._toggleButtonState(inputList, buttonElement);
   }
 
-  _setEventListeners() {
-    this._inputList.forEach((inputElement) => {
+  _setEventListeners(formElement) { // исправлено после ревью 4
+    const inputList = Array.from(formElement.querySelectorAll(this._inputSelector));
+    const buttonElement = formElement.querySelector(this._submitButtonSelector);
+
+    inputList.forEach((inputElement) => {
       inputElement.addEventListener('input', () => {
         this._checkInputValidity(inputElement);
-        this._toggleButtonState(this._inputList, this._buttonElement);
+        this._toggleButtonState(inputList, buttonElement);
       });
     });
   }
 
-  enableValidation() {
-    this._setEventListeners()
+  enableValidation() {  // исправлено после ревью 4
+    this.togglePopupButtonState(this._formElement);
+    this._setEventListeners(this._formElement);
+
+    this._formElement.addEventListener('submit', (event) => {
+      event.preventDefault();
+    });
   }
 }

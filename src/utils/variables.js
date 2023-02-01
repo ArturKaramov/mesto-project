@@ -1,11 +1,13 @@
 export const popupCloseList = Array.from(document.querySelectorAll('.popup__close'));
 export const popupProfile = document.querySelector('.popup-profile');
+export const formProfile = popupProfile.querySelector('.popup__form'); // добавлено Александром после ревью 4
 export const popupElement = document.querySelector('.popup-element');
+export const formElement = popupElement.querySelector('.popup__form'); // добавлено Александром после ревью 4
 export const popupAvatar = document.querySelector('.popup-avatar');
 export const formAvatar = popupAvatar.querySelector('.popup__form');
 export const profileEdit = document.querySelector('.profile__edit-button');
 export const elementAdd = document.querySelector('.profile__add-button');
-export const formProfile = document.querySelector('.profile-edit');
+// export const formProfile = document.querySelector('.profile-edit'); // изменено Александром после ревью 4
 export const inputName = formProfile.querySelector('.profile-edit__name');
 export const inputAbout = formProfile.querySelector('.profile-edit__about');
 export const profileName = document.querySelector('.profile__name');
