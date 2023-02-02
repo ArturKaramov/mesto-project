@@ -17,18 +17,18 @@ export default class FormValidator {
     this._submitButtonSelector = submitButtonSelector;
     this._inputErrorClass = inputErrorClass;
     this._formElement = formElement;
+    this._inputList = Array.from(this._formElement.querySelectorAll(this._inputSelector));
+    this._buttonElement = this._formElement.querySelector(this._submitButtonSelector);
   }
 
   _showInputError(inputElement, errorMessage) {
     const errorElement = this._formElement.querySelector(`.${inputElement.id}-error`);
-
     inputElement.classList.add(this._inputErrorClass);
     errorElement.textContent = errorMessage;
   }
 
   _hideInputError(inputElement) {
     const errorElement = this._formElement.querySelector(`.${inputElement.id}-error`);
-
     inputElement.classList.remove(this._inputErrorClass);
     errorElement.textContent = '';
   }
@@ -47,47 +47,36 @@ export default class FormValidator {
     }
   }
 
-  _hasInvalidInput(inputList) {
-    return inputList.some((input) => {return !input.validity.valid})
+  _hasInvalidInput() {
+    return this._inputList.some((input) => {return !input.validity.valid})
   }
 
-  _toggleButtonState(inputList, buttonElement) {
-    if (this._hasInvalidInput(inputList)) {
-      buttonElement.setAttribute("disabled", "")
+  _toggleButtonState() {
+    if (this._hasInvalidInput()) {
+      this._buttonElement.setAttribute("disabled", "")
     }
     else {
-      buttonElement.removeAttribute("disabled", "")}
+      this._buttonElement.removeAttribute("disabled", "")}
   }
 
-  togglePopupButtonState(formElement) { // Александр сделал метод публичным  // исправлено после ревью 4
-    const inputList = Array.from(formElement.querySelectorAll(this._inputSelector));
-    const buttonElement = formElement.querySelector(this._submitButtonSelector);
-
-    inputList.forEach((inputElement) => {
+  togglePopupButtonState() { // Александр сделал метод публичным  // исправлено после ревью 4
+    this._inputList.forEach((inputElement) => {
       this._hideInputError(inputElement);
     });
 
-    this._toggleButtonState(inputList, buttonElement);
+    this._toggleButtonState();
   }
 
-  _setEventListeners(formElement) { // исправлено после ревью 4
-    const inputList = Array.from(formElement.querySelectorAll(this._inputSelector));
-    const buttonElement = formElement.querySelector(this._submitButtonSelector);
-
-    inputList.forEach((inputElement) => {
+  _setEventListeners() { // исправлено после ревью 4
+    this._inputList.forEach((inputElement) => {
       inputElement.addEventListener('input', () => {
         this._checkInputValidity(inputElement);
-        this._toggleButtonState(inputList, buttonElement);
+        this._toggleButtonState();
       });
     });
   }
 
   enableValidation() {  // исправлено после ревью 4
-    this.togglePopupButtonState(this._formElement);
-    this._setEventListeners(this._formElement);
-
-    this._formElement.addEventListener('submit', (event) => {
-      event.preventDefault();
-    });
+    this._setEventListeners();
   }
 }

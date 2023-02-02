@@ -9,12 +9,13 @@ export default class PopupForDelete extends Popup {
   }
 
   _deleteFunction() {
-    this._deleteCallback(this._card);
+    this._deleteCallback(this._card, this._cardId);
   }
 
-  open(card) {
+  open(card, cardId) {
     super.open()
     this._card = card;
+    this._cardId = cardId;
     this._confirmButton.addEventListener('click', this._deleteFunction);
   }
 

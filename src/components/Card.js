@@ -77,7 +77,7 @@ export default class Card {
   }
 
   _setEventListeners() {
-    this._deleteButton.addEventListener('click', () => { this._deleteCallback(this) });
+    this._deleteButton.addEventListener('click', () => { this._deleteCallback(this, this._cardId) });
     this._photo.addEventListener('click', () => {this._handleCardClick(this._name, this._link)});
     this._likeButton.addEventListener('click', () => {this._toggleLike()});
   }

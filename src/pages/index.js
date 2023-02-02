@@ -3,7 +3,7 @@ import './index.css';
 import { pageIsLoading } from "../utils/utils";
 
 // после ревью 4 добавлены константы formAvatar, formProfile, formElement
-import {profileEdit, elementAdd, inputName, inputAbout, avatarButton, cardsContainer, validationSettings, formAvatar, formProfile, formElement } from "../utils/variables";
+import {profileEdit, elementAdd, inputName, inputAbout, avatarButton, validationSettings} from "../utils/variables";
 
 import { api } from '../components/Api';
 import FormValidator from '../components/FormValidator';
@@ -22,7 +22,6 @@ cardFormValidation.enableValidation();
 
 const avatarFormValidation = new FormValidator(validationSettings, {formElement: document.querySelector(".popup__form[name=avatar-link]")});
 avatarFormValidation.enableValidation();
-
 
 const popupFormProfile = new PopupWithForm('.popup-profile', {handleSubmit: submitProfileForm}); // добавлено Александром, создаем экземпляр попапа "Редактировать профиль" из класса PopupWithForm
 popupFormProfile.setEventListeners(); // изменено Александром после ревью 2
@@ -82,8 +81,8 @@ function submitAvatarForm({link}) {
     .finally(() => {popupFormAvatar.renderLoading(false)}); // изменено Александром, после ревью 1
 };
 
-function deleteElement(card) {
-  api.deleteCard(card._cardId) // изменено Александром, перед вызовом функции добавлено api.
+function deleteElement(card, cardId) {
+  api.deleteCard(cardId) // изменено Александром, перед вызовом функции добавлено api.
     .then(() => {
       card.removeCard();
       popupDelete.close();
@@ -95,7 +94,7 @@ const createCardElement = (item) => {
   const cardElement = new Card(
     item,
   {
-    deleteCallback: (evt) => { popupDelete.open(evt) },
+    deleteCallback: (card, cardId) => { popupDelete.open(card, cardId) },
     likeCallback: (card, cardId, method) => { toggleLikeButton(card, cardId, method) },
     handleCardClick: (cardName, cardLink) => { popupImage.open(cardName, cardLink) }
   },
@@ -109,17 +108,17 @@ profileEdit.addEventListener('click', function () {
   inputName.value = user.name;
   inputAbout.value = user.about;
   popupFormProfile.open(); // изменено Александром, используем объект от класса PopupWithForm
-  profileFormValidation.togglePopupButtonState(formProfile); // изменено Александром после ревью 4
+  profileFormValidation.togglePopupButtonState(); // изменено Александром после ревью 4
 });
 
 elementAdd.addEventListener('click', function () {
   popupFormPlace.open(); // изменено Александром, используем объект от класса PopupWithForm
-  cardFormValidation.togglePopupButtonState(formElement); // изменено Александром после ревью 4
+  cardFormValidation.togglePopupButtonState(); // изменено Александром после ревью 4
 });
 
 avatarButton.addEventListener('click', function() {
   popupFormAvatar.open(); // изменено Александром, используем объект от класса PopupWithForm
-  avatarFormValidation.togglePopupButtonState(formAvatar); // изменено Александром после ревью 4
+  avatarFormValidation.togglePopupButtonState(); // изменено Александром после ревью 4
 });
 
 api.getInitialData()
