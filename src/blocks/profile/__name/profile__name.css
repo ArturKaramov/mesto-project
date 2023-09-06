@@ -1,11 +1,5 @@
 .profile__name {
-  /* изменено Александром */
-  width: 100%;
-  max-width: 536px;
-
-  /* Так было до изменения */
-  /* max-width: 300px; */
-
+  max-width: 300px;
   margin: 0;
   font-weight: 500;
   font-size: 42px;

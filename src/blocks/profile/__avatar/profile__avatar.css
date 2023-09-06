@@ -1,21 +1,7 @@
-/* новый код Александра */
-
 .profile__avatar {
   width: 120px;
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  box-sizing: border-box;
-  margin: 0 auto;
-  padding: 0;
-}
-
-/* старый код Артура */
-
-/* .profile__avatar {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  object-fit: cover;
   object-position: top;
-} */
+}
