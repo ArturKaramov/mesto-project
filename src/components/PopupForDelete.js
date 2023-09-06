@@ -6,16 +6,24 @@ export default class PopupForDelete extends Popup {
     this._deleteCallback = deleteCallback;
     this._deleteFunction = this._deleteFunction.bind(this);
     this._confirmButton = this._popup.querySelector('.popup__button');
+    this._confirmButtonText = this._confirmButton.textContent;
   }
 
   _deleteFunction() {
-    this._deleteCallback(this._card, this._cardId);
+    this._deleteCallback(this._card);
   }
 
-  open(card, cardId) {
+  renderLoading(isLoading, loadingText='Удаление...') {
+    if (isLoading) {
+      this._confirmButton.textContent = loadingText;
+    } else {
+      this._confirmButton.textContent = this._confirmButtonText;
+    }
+  }
+
+  open(card) {
     super.open()
     this._card = card;
-    this._cardId = cardId;
     this._confirmButton.addEventListener('click', this._deleteFunction);
   }
 

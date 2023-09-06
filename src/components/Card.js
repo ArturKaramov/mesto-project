@@ -1,24 +1,9 @@
-//  M E S T O   -   O O P
-
-// Поработайте с функциональностью работы карточек и валидации форм.
-// Всю валидацию форм вы до этого писали в отдельном файле, а работу карточек — в другом.
-// Теперь преобразуйте функции, которые существовали ранее, в единое целое — классы Card и FormValidator.
-// В этом пункте задания поговорим про класс Card.
-// Организуйте в классе Card код, который создаёт карточку с текстом и ссылкой на изображение:
-
-// - принимает в конструктор её данные и селектор её template-элемента;
-// - содержит приватные методы, которые работают с разметкой, устанавливают слушателей событий;
-// - содержит приватные методы для каждого обработчика;
-// - содержит один публичный метод, который возвращает полностью работоспособный и наполненный данными элемент карточки.
-// Для каждой карточки создайте экземпляр класса Card. Когда дойдёте до реализации классов Popup,
-// свяжите класс Card c попапом. Сделайте так, чтобы Card принимал в конструктор функцию handleCardClick.
-// При клике на карточку эта функция должна открывать попап с картинкой.
-
 export default class Card {
   constructor({name, link, likes, owner, _id}, {deleteCallback, likeCallback, handleCardClick}, selector, {userId}) {
     this._name = name;
     this._link = link;
     this._likes = likes;
+    this._owner = owner.name;
     this._isLiked = likes.some((like) => {return like._id === userId});
     this._isMine = owner._id === userId;
     this._cardId = _id;
@@ -63,7 +48,7 @@ export default class Card {
   _toggleLike() {
     let method = null;
     this._isLiked ? method = 'DELETE' : method = 'PUT';
-    this._likeCallback(this, this._cardId, method)
+    this._likeCallback(this, method)
   }
 
   changeLikeCondition(data) {
@@ -72,18 +57,22 @@ export default class Card {
     this._setLikeCondition()
   }
 
-  removeCard() {
-    this._element.remove()
-  }
-
   _setEventListeners() {
-    this._deleteButton.addEventListener('click', () => { this._deleteCallback(this, this._cardId) });
-    this._photo.addEventListener('click', () => {this._handleCardClick(this._name, this._link)});
+    this._deleteButton.addEventListener('click', () => { this._deleteCallback(this) });
+    this._photo.addEventListener('click', () => {this._handleCardClick(this._name, this._link, this._owner)});
     this._likeButton.addEventListener('click', () => {this._toggleLike()});
   }
 
   getCard() {
     return this._createCard()
+  }
+
+  getCardId() {
+    return this._cardId
+  }
+
+  removeCard() {
+    this._element.remove()
   }
 };
 

@@ -1,17 +1,5 @@
-//  M E S T O   -   O O P
-
-// Создайте класс FormValidator, который настраивает валидацию полей формы:
-// принимает в конструктор объект настроек с селекторами и классами формы;
-// принимает вторым параметром элемент той формы, которая валидируется;
-// имеет приватные методы, которые обрабатывают форму: проверяют валидность поля,
-// изменяют состояние кнопки сабмита, устанавливают все обработчики;
-// имеет публичный метод enableValidation, который включает валидацию формы.
-// Для каждой проверяемой формы создавайте экземпляр класса FormValidator.
-
-
-
 export default class FormValidator {
-  constructor({ formSelector, inputSelector, submitButtonSelector, inputErrorClass }, {formElement}) { // исправлено после ревью 4
+  constructor({ formSelector, inputSelector, submitButtonSelector, inputErrorClass }, {formElement}) {
     this._formSelector = formSelector;
     this._inputSelector = inputSelector;
     this._submitButtonSelector = submitButtonSelector;
@@ -59,7 +47,7 @@ export default class FormValidator {
       this._buttonElement.removeAttribute("disabled", "")}
   }
 
-  togglePopupButtonState() { // Александр сделал метод публичным  // исправлено после ревью 4
+  togglePopupButtonState() {
     this._inputList.forEach((inputElement) => {
       this._hideInputError(inputElement);
     });
@@ -67,7 +55,7 @@ export default class FormValidator {
     this._toggleButtonState();
   }
 
-  _setEventListeners() { // исправлено после ревью 4
+  _setEventListeners() {
     this._inputList.forEach((inputElement) => {
       inputElement.addEventListener('input', () => {
         this._checkInputValidity(inputElement);
@@ -76,7 +64,7 @@ export default class FormValidator {
     });
   }
 
-  enableValidation() {  // исправлено после ревью 4
+  enableValidation() {
     this._setEventListeners();
   }
 }

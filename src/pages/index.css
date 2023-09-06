@@ -19,6 +19,8 @@
 @import url("../blocks/popup-image/__figure/popup-image__figure.css");
 @import url("../blocks/popup-image/__image/popup-image__image.css");
 @import url("../blocks/popup-image/__caption/popup-image__caption.css");
+@import url("../blocks/popup-image/__name/popup-image__name.css");
+@import url("../blocks/popup-image/__owner/popup-image__owner.css");
 /*страница*/
 @import url("../blocks/page/page.css");
 @import url("../blocks/page/_loading/page_loading.css");
