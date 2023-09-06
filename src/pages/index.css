@@ -32,6 +32,7 @@
 @import url("../blocks/profile/profile.css");
 @import url("../blocks/profile/__avatar-button/profile__avatar-button.css");
 @import url("../blocks/profile/__avatar/profile__avatar.css");
+@import url("../blocks/profile/__avatar-box/profile__avatar-box.css");
 @import url("../blocks/profile/__about/profile__about.css");
 @import url("../blocks/profile/__data/profile__data.css");
 @import url("../blocks/profile/__info/profile__info.css");

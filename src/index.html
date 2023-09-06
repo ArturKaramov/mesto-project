@@ -16,9 +16,10 @@
   <main class="content">
     <section class="profile">
       <div class="profile__data">
-        <button class="profile__avatar-button">
+        <div class="profile__avatar-box">
           <img class="profile__avatar" src="#" alt="Аватар пользователя">
-        </button>
+          <button class="profile__avatar-button" type="button"></button>
+        </div>
         <div class="profile__info">
           <h1 class="profile__name"> </h1>
           <button type="button" class="profile__edit-button">
@@ -37,7 +38,7 @@
     </div>
   </main>
   <footer class="footer">
-    <p class="footer__copyright">&copy;2022 Mesto Russia</p>
+    <p class="footer__copyright">&copy;2023 Mesto Russia</p>
   </footer>
 
   <div class="popup popup-profile">
@@ -71,7 +72,6 @@
         <input type="url" id="url-input" class="popup__item card-add__link" name="link"
             placeholder="Ссылка на картинку" required>
         <span class="popup__error url-input-error"></span>
-        <button type="submit" class="popup__button card-add__save" data-init="Создать" data-load="Создание...">Создать</button>
         <button type="submit" class="popup__button card-add__save" data-init="Создать" data-load="Создание...">Создать</button>
       </form>
     </div>
@@ -111,7 +111,6 @@
       <form class="popup__form" name="avatar-link" novalidate>
         <input type="url" id="ava-url-input" class="popup__item avatar__link" name="link" placeholder="Ссылка на картинку" required>
         <span class="popup__error ava-url-input-error"></span>
-        <button type="submit" class="popup__button" data-init="Создать" data-load="Создание...">Создать</button>
         <button type="submit" class="popup__button" data-init="Создать" data-load="Создание...">Создать</button>
       </form>
     </div>

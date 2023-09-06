@@ -3,6 +3,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  /* добавлено Александром */
+  gap: 20px;
 }
 
 @media screen and (max-width: 536px) {

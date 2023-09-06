@@ -1,0 +1,6 @@
+.profile__avatar-box {
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 0;
+  position: relative;
+}
