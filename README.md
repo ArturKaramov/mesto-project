@@ -1,6 +1,12 @@
-# Проект: Mesto: ООП (Пятый месяц)
+![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E) ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white) ![CSS](https://img.shields.io/badge/css-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
 
-### Обзор
+<h1 align="center">
+    Mesto: ООП
+</h1>
+
+Ссылка на проект в gh-pages: **[Mesto](https://arturkaramov.github.io/mesto-project/)**
+
+## 📖 О проекте
 
 Небольшой лэндинг для публикации изображений
 
@@ -18,16 +24,12 @@
 
 # Технологии
 
-- [HTML](https://ru.wikipedia.org/wiki/HTML)
-- [CSS](https://ru.wikipedia.org/wiki/CSS)
-- [JavaScript](https://developer.mozilla.org/ru/docs/Web/JavaScript)
-- [Webpack](https://webpack.js.org/)
-- [Методология БЭМ](https://ru.bem.info/methodology/)
-
-# Проекты на GitHub Pages
-
-[Mesto](https://arturkaramov.github.io/mesto-project/)
+- HTML
+- CSS
+- JavaScript
+- Webpack
+- Методология БЭМ
 
 # Автор проекта
 
-[Карамов Артур](karamov.1311@yandex.ru)
+[Карамов Артур](https://t.me/Karamyslo)
